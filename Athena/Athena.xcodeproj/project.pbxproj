@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
 		8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */; };
 		8B5A6FA327FDD799003F56C7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* ContentView.swift */; };
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
@@ -14,6 +15,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
+		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8B5A6F9D27FDD799003F56C7 /* Athena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athena.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthenaApp.swift; sourceTree = "<group>"; };
 		8B5A6FA227FDD799003F56C7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -26,17 +29,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8B32FE7A27FE306B00B93C0D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8B5A6F9427FDD799003F56C7 = {
 			isa = PBXGroup;
 			children = (
 				8B5A6F9F27FDD799003F56C7 /* Athena */,
 				8B5A6F9E27FDD799003F56C7 /* Products */,
+				8B32FE7A27FE306B00B93C0D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -51,6 +64,7 @@
 		8B5A6F9F27FDD799003F56C7 /* Athena */ = {
 			isa = PBXGroup;
 			children = (
+				8B32FE7927FE306A00B93C0D /* Athena.entitlements */,
 				8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */,
 				8B5A6FA227FDD799003F56C7 /* ContentView.swift */,
 				8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */,
@@ -264,6 +278,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Athena/Athena.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Athena/Preview Content\"";
@@ -294,6 +309,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Athena/Athena.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Athena/Preview Content\"";
