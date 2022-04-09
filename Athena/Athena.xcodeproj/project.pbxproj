@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
 		8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */; };
-		8B5A6FA327FDD799003F56C7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* ContentView.swift */; };
+		8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */; };
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
 		8B5A6FA827FDD79D003F56C7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -19,7 +19,7 @@
 		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8B5A6F9D27FDD799003F56C7 /* Athena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athena.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthenaApp.swift; sourceTree = "<group>"; };
-		8B5A6FA227FDD799003F56C7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOne.swift; sourceTree = "<group>"; };
 		8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,7 +66,7 @@
 			children = (
 				8B32FE7927FE306A00B93C0D /* Athena.entitlements */,
 				8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */,
-				8B5A6FA227FDD799003F56C7 /* ContentView.swift */,
+				8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */,
 				8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */,
 				8B5A6FA627FDD79D003F56C7 /* Preview Content */,
 			);
@@ -151,7 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B5A6FA327FDD799003F56C7 /* ContentView.swift in Sources */,
+				8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */,
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

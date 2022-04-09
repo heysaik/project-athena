@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  OnboardingOne.swift
 //  Athena
 //
 //  Created by Sai Kambampati on 4/6/22.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct OnboardingOne: View {
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
@@ -50,6 +50,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        OnboardingOne()
     }
 }
