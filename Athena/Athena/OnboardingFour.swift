@@ -20,10 +20,14 @@ struct OnboardingFour: View {
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading, spacing: 24) {
                 Spacer()
-                Image("icon-book")
+                Image(systemName: "person.crop.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 150)
+                    .foregroundColor(.white.opacity(0.7))
+                    .shadow(color: Color(red: 23/255, green: 197/255, blue: 1), radius: 10, x: 0, y: 0)
+                    .padding(.horizontal)
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Accessible on any device")
                         .font(.system(.title, design: .rounded)).bold()
