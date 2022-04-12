@@ -29,7 +29,7 @@ struct OnboardingThree: View {
                 }
                 .padding(.horizontal)
                 
-                NavigationLink(destination: OnboardingFour()){
+                NavigationLink(destination: OnboardingFour().navigationBarHidden(true)){
                     ZStack {
                         RoundedRectangle(cornerRadius: 22)
                             .frame(height: 44)
