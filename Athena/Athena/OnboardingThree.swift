@@ -9,6 +9,7 @@ import SwiftUI
 
 struct OnboardingThree: View {
     var body: some View {
+        NavigationView{
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                 .edgesIgnoringSafeArea(.all)
@@ -28,12 +29,7 @@ struct OnboardingThree: View {
                 }
                 .padding(.horizontal)
                 
-                
-                
-                Button(action: {
-                    // Go to next screen
-
-                }) {
+                NavigationLink(destination: OnboardingFour()){
                     ZStack {
                         RoundedRectangle(cornerRadius: 22)
                             .frame(height: 44)
@@ -47,6 +43,7 @@ struct OnboardingThree: View {
                 .padding(.horizontal)
             }
             .padding(.vertical)
+        }
         }
     }
 }
