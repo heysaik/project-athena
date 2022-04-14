@@ -11,6 +11,7 @@ import FirebaseAuth
 struct OnboardingFour: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var showHomeScreen = false
     
     private let auth = Auth.auth()
     
@@ -73,7 +74,7 @@ struct OnboardingFour: View {
                             // Send email verification
                             try await authResult.user.sendEmailVerification()
                             
-                            // TODO: Segue to home screen
+                            showHomeScreen.toggle()
                         }
                     }) {
                         ZStack {
@@ -92,7 +93,7 @@ struct OnboardingFour: View {
                         Task {
                             _ = try await auth.signIn(withEmail: email, password: password)
                             
-                            // TODO: Segue to home screen
+                            showHomeScreen.toggle()
                         }
                     }) {
                         ZStack {
@@ -111,6 +112,9 @@ struct OnboardingFour: View {
             .padding(.vertical)
         }
         .navigationBarHidden(true)
+        .sheet(isPresented: $showHomeScreen) {
+            RootView()
+        }
     }
 }
 
