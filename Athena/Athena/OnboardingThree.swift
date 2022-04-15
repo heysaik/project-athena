@@ -18,7 +18,9 @@ struct OnboardingThree: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 150)
-                    .offset(x: 20)
+                    .foregroundColor(.white.opacity(0.7))
+                    .shadow(color: Color(red: 23/255, green: 197/255, blue: 1), radius: 10, x: 0, y: 0)
+                    .padding(.horizontal)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Jot down your amazing thoughts")
                         .font(.system(.title, design: .rounded)).bold()
