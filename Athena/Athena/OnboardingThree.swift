@@ -14,10 +14,11 @@ struct OnboardingThree: View {
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading, spacing: 24) {
                 Spacer()
-                Image("icon-bookmark")
+                Image("bookmark.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 150)
+                    .offset(x: 20)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Jot down your amazing thoughts")
                         .font(.system(.title, design: .rounded)).bold()
