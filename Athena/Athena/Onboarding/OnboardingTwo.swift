@@ -33,7 +33,7 @@ struct OnboardingTwo: View {
 
                 // Go to next screen
                 NavigationLink {
-                    OnboardingFour()
+                    OnboardingThree()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 22)

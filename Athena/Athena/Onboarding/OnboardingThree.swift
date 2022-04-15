@@ -14,10 +14,10 @@ struct OnboardingThree: View {
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading, spacing: 24) {
                 Spacer()
-                Image("bookmark.fill")
+                Image(systemName: "bookmark.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 150)
+                    .frame(height: 100)
                     .foregroundColor(.white.opacity(0.7))
                     .shadow(color: Color(red: 23/255, green: 197/255, blue: 1), radius: 10, x: 0, y: 0)
                     .padding(.horizontal)
@@ -30,8 +30,10 @@ struct OnboardingThree: View {
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
-                //Uncomment out NavigationLink and the ending curly braces to link to the next view
-                //NavigationLink(destination: OnboardingFour().navigationBarHidden(true)){
+                // Go to next screen
+                NavigationLink {
+                    OnboardingFour()
+                } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 22)
                             .frame(height: 44)
@@ -40,12 +42,13 @@ struct OnboardingThree: View {
                             .font(.system(size: 17, weight: .semibold, design: .rounded))
                             .foregroundColor(.white)
                     }
-                //}
+                }
                 .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                 .padding(.horizontal)
             }
             .padding(.vertical)
         }
+        .navigationBarHidden(true)
     }
 }
 

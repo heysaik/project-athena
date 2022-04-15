@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 @main
 struct AthenaApp: App {
@@ -13,8 +14,11 @@ struct AthenaApp: App {
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-//            OnboardingOne()
+            if Auth.auth().currentUser == nil {
+                OnboardingOne()
+            } else {
+                RootView()
+            }
         }
     }
 }

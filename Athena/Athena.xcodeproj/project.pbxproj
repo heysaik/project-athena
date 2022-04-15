@@ -103,7 +103,6 @@
 				8B32FE7927FE306A00B93C0D /* Athena.entitlements */,
 				8B94EA102802A14D009A0D36 /* AppDelegate.swift */,
 				8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */,
-				071516C82805FC740025F373 /* OnboardingThree.swift */,
 				8B7C61F62807F1EA00A0E97F /* Onboarding */,
 				8B7C61F72807F20100A0E97F /* RootView.swift */,
 				8B7C61F92807F21B00A0E97F /* LibraryView.swift */,
@@ -130,6 +129,7 @@
 			children = (
 				8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */,
 				8B0005432807EF0600ED855C /* OnboardingTwo.swift */,
+				071516C82805FC740025F373 /* OnboardingThree.swift */,
 				8B94E9FD28029E56009A0D36 /* OnboardingFour.swift */,
 			);
 			path = Onboarding;
