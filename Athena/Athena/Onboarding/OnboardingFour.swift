@@ -11,6 +11,7 @@ import FirebaseAuth
 struct OnboardingFour: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var showHomeScreen = false
     
     private let auth = Auth.auth()
     
@@ -23,7 +24,7 @@ struct OnboardingFour: View {
                 Image(systemName: "person.crop.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(height: 150)
+                    .frame(height: 100)
                     .foregroundColor(.white.opacity(0.7))
                     .shadow(color: Color(red: 23/255, green: 197/255, blue: 1), radius: 10, x: 0, y: 0)
                     .padding(.horizontal)
@@ -47,7 +48,7 @@ struct OnboardingFour: View {
                         .background(
                             RoundedRectangle(cornerRadius: 10)
                                 .frame(height: 44)
-                                .foregroundColor(.white.opacity(0.25))
+                                .foregroundColor(.white.opacity(0.75))
                         )
                         .frame(height: 44)
                     
@@ -58,7 +59,7 @@ struct OnboardingFour: View {
                         .background(
                             RoundedRectangle(cornerRadius: 10)
                                 .frame(height: 44)
-                                .foregroundColor(.white.opacity(0.25))
+                                .foregroundColor(.white.opacity(0.75))
                         )
                         .frame(height: 44)
                 }
@@ -73,7 +74,7 @@ struct OnboardingFour: View {
                             // Send email verification
                             try await authResult.user.sendEmailVerification()
                             
-                            // TODO: Segue to home screen
+                            showHomeScreen.toggle()
                         }
                     }) {
                         ZStack {
@@ -92,7 +93,7 @@ struct OnboardingFour: View {
                         Task {
                             _ = try await auth.signIn(withEmail: email, password: password)
                             
-                            // TODO: Segue to home screen
+                            showHomeScreen.toggle()
                         }
                     }) {
                         ZStack {
@@ -109,6 +110,10 @@ struct OnboardingFour: View {
                 .padding(.horizontal)
             }
             .padding(.vertical)
+        }
+        .navigationBarHidden(true)
+        .sheet(isPresented: $showHomeScreen) {
+            RootView()
         }
     }
 }
