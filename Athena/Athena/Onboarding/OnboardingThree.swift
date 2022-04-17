@@ -1,20 +1,20 @@
 //
-//  OnboardingTwo.swift
+//  OnboardingThree.swift
 //  Athena
 //
-//  Created by Sai Kambampati on 4/13/22.
+//  Created by Kevin Crawford on 4/12/22.
 //
 
 import SwiftUI
 
-struct OnboardingTwo: View {
+struct OnboardingThree: View {
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading, spacing: 24) {
                 Spacer()
-                Image(systemName: "magnifyingglass")
+                Image(systemName: "note.text")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 100)
@@ -22,18 +22,17 @@ struct OnboardingTwo: View {
                     .shadow(color: Color(red: 23/255, green: 197/255, blue: 1), radius: 10, x: 0, y: 0)
                     .padding(.horizontal)
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Search for books worldwide")
+                    Text("Jot down your amazing thoughts")
                         .font(.system(.title, design: .rounded)).bold()
                         .foregroundColor(.white)
-                    Text("Athena has the latest information about any book. Powered by Google Books, Athena allows you to search for any book and add it to your library tracker.")
+                    Text("Have a quote that you like? Want to note down a quick relfection? Athena makes it easy to store your notes and ideas while reading. We want to bring the technological features of ebooks to readers who love physical hardcovers.")
                         .font(.system(.title3, design: .rounded))
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
-
                 // Go to next screen
                 NavigationLink {
-                    OnboardingThree()
+                    OnboardingFour()
                 } label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 22)
@@ -53,8 +52,8 @@ struct OnboardingTwo: View {
     }
 }
 
-struct OnboardingTwo_Previews: PreviewProvider {
+struct OnboardingThree_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingTwo()
+        OnboardingThree()
     }
 }
