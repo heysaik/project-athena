@@ -25,7 +25,7 @@ struct OnboardingTwo: View {
                     Text("Search for books worldwide")
                         .font(.system(.title, design: .rounded)).bold()
                         .foregroundColor(.white)
-                    Text("Athena has the latest information about any book. A quick search can yield your ideal result")
+                    Text("Athena has the latest information about any book. Powered by Google Books, Athena allows you to search for any book and add it to your library tracker.")
                         .font(.system(.title3, design: .rounded))
                         .foregroundColor(.white)
                 }

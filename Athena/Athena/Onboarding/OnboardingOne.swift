@@ -23,7 +23,7 @@ struct OnboardingOne: View {
                         Text("Welcome to Athena")
                             .font(.system(.title, design: .rounded)).bold()
                             .foregroundColor(.white)
-                        Text("Athena is the app for book lovers around the world to help you keep track of your readings.")
+                        Text("Athena is the app for readers around the world, helping you keep track of the books you've already read, are currently reading, and wish to read. We want to encourage you to build the habit of reading.")
                             .font(.system(.title3, design: .rounded))
                             .foregroundColor(.white)
                     }

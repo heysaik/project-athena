@@ -14,7 +14,7 @@ struct OnboardingThree: View {
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading, spacing: 24) {
                 Spacer()
-                Image(systemName: "bookmark.fill")
+                Image(systemName: "note.text")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 100)
@@ -25,7 +25,7 @@ struct OnboardingThree: View {
                     Text("Jot down your amazing thoughts")
                         .font(.system(.title, design: .rounded)).bold()
                         .foregroundColor(.white)
-                    Text("Have a quote that you like? Athena makes it easy to store your notes and bookmark your ideas while reading")
+                    Text("Have a quote that you like? Want to note down a quick relfection? Athena makes it easy to store your notes and ideas while reading. We want to bring the technological features of ebooks to readers who love physical hardcovers.")
                         .font(.system(.title3, design: .rounded))
                         .foregroundColor(.white)
                 }

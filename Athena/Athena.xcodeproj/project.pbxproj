@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		071516C92805FC740025F373 /* OnboardingThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071516C82805FC740025F373 /* OnboardingThree.swift */; };
 		8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0005432807EF0600ED855C /* OnboardingTwo.swift */; };
+		8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1D86C0280CA2270051F712 /* LoadingView.swift */; };
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
 		8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */; };
 		8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		071516C82805FC740025F373 /* OnboardingThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThree.swift; sourceTree = "<group>"; };
 		8B0005432807EF0600ED855C /* OnboardingTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTwo.swift; sourceTree = "<group>"; };
+		8B1D86C0280CA2270051F712 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
 		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		8B5A6F9D27FDD799003F56C7 /* Athena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athena.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +105,7 @@
 				8B32FE7927FE306A00B93C0D /* Athena.entitlements */,
 				8B94EA102802A14D009A0D36 /* AppDelegate.swift */,
 				8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */,
+				8B1D86C0280CA2270051F712 /* LoadingView.swift */,
 				8B7C61F62807F1EA00A0E97F /* Onboarding */,
 				8B7C61F72807F20100A0E97F /* RootView.swift */,
 				8B7C61F92807F21B00A0E97F /* LibraryView.swift */,
@@ -223,6 +226,7 @@
 				8B7C62002807F24300A0E97F /* ProfileView.swift in Sources */,
 				8B94E9FE28029E56009A0D36 /* OnboardingFour.swift in Sources */,
 				8B7C61F82807F20100A0E97F /* RootView.swift in Sources */,
+				8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */,
 				8B7C61FC2807F22900A0E97F /* SearchView.swift in Sources */,
 				8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */,
 				071516C92805FC740025F373 /* OnboardingThree.swift in Sources */,

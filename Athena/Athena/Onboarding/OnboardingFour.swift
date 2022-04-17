@@ -7,13 +7,19 @@
 
 import SwiftUI
 import FirebaseAuth
+import FirebaseFirestore
 
 struct OnboardingFour: View {
     @State private var email = ""
     @State private var password = ""
     @State private var showHomeScreen = false
-    
+    @State private var alertTitle = ""
+    @State private var alertMessage = ""
+    @State private var showErrorAlert = false
+    @State private var showLoadingView = false
+
     private let auth = Auth.auth()
+    private let firestore = Firestore.firestore()
     
     var body: some View {
         ZStack {
@@ -30,17 +36,17 @@ struct OnboardingFour: View {
                     .padding(.horizontal)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Accessible on any device")
+                    Text("Create an Account")
                         .font(.system(.title, design: .rounded)).bold()
                         .foregroundColor(.white)
-                    Text("Access your account from any device by creating an account to save your books, notes, and searches! ")
+                    Text("Having an Athena account lets you login from any iOS or iPadOS device to quickly access your saved books, notes, and searches!")
                         .font(.system(.title3, design: .rounded))
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    TextField("Email", text: $email, prompt: Text("bruce@wayne.com"))
+                    TextField("Email", text: $email, prompt: Text("bruce@wayneenterprises.com"))
                         .padding(.horizontal)
                         .keyboardType(.emailAddress)
                         .textCase(.lowercase)
@@ -52,7 +58,7 @@ struct OnboardingFour: View {
                         )
                         .frame(height: 44)
                     
-                    SecureField("Password", text: $password, prompt: Text("checkonetwo"))
+                    SecureField("Password", text: $password, prompt: Text("imbatman"))
                         .padding(.horizontal)
                         .textCase(.lowercase)
                         .foregroundColor(.white)
@@ -64,17 +70,73 @@ struct OnboardingFour: View {
                         .frame(height: 44)
                 }
                 .padding(.horizontal)
-                
+
                 HStack {
                     Button(action: {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            showLoadingView = true
+                        }
+                        
                         Task {
                             // Create Account
-                            let authResult = try await auth.createUser(withEmail: email, password: password)
+                            var authResult: AuthDataResult? = nil
+                            do {
+                                authResult = try await auth.createUser(withEmail: email, password: password)
+                            } catch let error {
+                                alertTitle = "Could not create account"
+                                alertMessage = error.localizedDescription
+                                showErrorAlert = true
+                                showLoadingView = false
+                                return
+                            }
                             
-                            // Send email verification
-                            try await authResult.user.sendEmailVerification()
-                            
-                            showHomeScreen.toggle()
+                            if let authResult = authResult {
+                                // Send email verification
+                                try await authResult.user.sendEmailVerification()
+                                
+                                // Set Firestore Data
+                                do {
+                                    try await firestore
+                                        .collection("users")
+                                        .document(authResult.user.uid)
+                                        .setData([
+                                            "alreadyRead": [],
+                                            "wishlist": [],
+                                            "currentlyReading": [],
+                                            "name": "Athena User"
+                                        ])
+                                } catch let error {
+                                    alertTitle = "Could not create account"
+                                    alertMessage = error.localizedDescription
+                                    showErrorAlert = true
+                                    showLoadingView = false
+                                    return
+                                }
+                                
+                                do {
+                                    try await firestore
+                                        .collection("private")
+                                        .document(authResult.user.uid)
+                                        .setData([
+                                            "email": email,
+                                            "insights": [],
+                                            "searchHistory": []
+                                        ])
+                                } catch let error {
+                                    alertTitle = "Could not create account"
+                                    alertMessage = error.localizedDescription
+                                    showErrorAlert = true
+                                    showLoadingView = false
+                                    return
+                                }
+                                
+                                withAnimation(.easeInOut(duration: 0.25)) {
+                                    showLoadingView = false
+                                }
+                                
+                                // Show Home Screen
+                                showHomeScreen.toggle()
+                            }
                         }
                     }) {
                         ZStack {
@@ -89,10 +151,26 @@ struct OnboardingFour: View {
                     .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
                     
                     Button(action: {
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            showLoadingView = true
+                        }
+                        
                         // Login
                         Task {
-                            _ = try await auth.signIn(withEmail: email, password: password)
+                            do {
+                                _ = try await auth.signIn(withEmail: email, password: password)
+                            } catch let error {
+                                alertTitle = "Could not sign in"
+                                alertMessage = error.localizedDescription
+                                showErrorAlert = true
+                                showLoadingView = false
+                                return
+                            }
                             
+                            
+                            withAnimation(.easeInOut(duration: 0.25)) {
+                                showLoadingView = false
+                            }
                             showHomeScreen.toggle()
                         }
                     }) {
@@ -112,8 +190,23 @@ struct OnboardingFour: View {
             .padding(.vertical)
         }
         .navigationBarHidden(true)
-        .sheet(isPresented: $showHomeScreen) {
+        .fullScreenCover(isPresented: $showHomeScreen) {
             RootView()
+        }
+        .alert("An Error Occured", isPresented: $showErrorAlert) {
+            Button {
+                // Dismiss
+            } label: {
+                Text("OK")
+            }
+
+        } message: {
+            Text(alertMessage)
+        }
+        .overlay {
+            if showLoadingView {
+                LoadingView()
+            }
         }
     }
 }
