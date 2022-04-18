@@ -7,6 +7,7 @@
 
 import Foundation
 
+// This structure is used to save 
 struct Book: Identifiable, Codable {
     var id: String
     var title: String
