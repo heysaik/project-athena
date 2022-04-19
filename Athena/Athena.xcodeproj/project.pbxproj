@@ -11,6 +11,11 @@
 		8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0005432807EF0600ED855C /* OnboardingTwo.swift */; };
 		8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1D86C0280CA2270051F712 /* LoadingView.swift */; };
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
+		8B541057280E1C5100FD1A90 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B541056280E1C5100FD1A90 /* Book.swift */; };
+		8B541059280E1ED300FD1A90 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B541058280E1ED300FD1A90 /* User.swift */; };
+		8B54105C280E1FD400FD1A90 /* BooksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54105B280E1FD400FD1A90 /* BooksAPI.swift */; };
+		8B541060280E261500FD1A90 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54105F280E261500FD1A90 /* SwiftyJSON.swift */; };
+		8B541063280E297700FD1A90 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8B541062280E297700FD1A90 /* SDWebImageSwiftUI */; };
 		8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */; };
 		8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */; };
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
@@ -38,6 +43,10 @@
 		8B1D86C0280CA2270051F712 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
 		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		8B541056280E1C5100FD1A90 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
+		8B541058280E1ED300FD1A90 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		8B54105B280E1FD400FD1A90 /* BooksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAPI.swift; sourceTree = "<group>"; };
+		8B54105F280E261500FD1A90 /* SwiftyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		8B5A6F9D27FDD799003F56C7 /* Athena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athena.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthenaApp.swift; sourceTree = "<group>"; };
 		8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOne.swift; sourceTree = "<group>"; };
@@ -62,6 +71,7 @@
 				8B94EA0D2802A11F009A0D36 /* FirebasePerformance in Frameworks */,
 				8B94EA032802A11F009A0D36 /* FirebaseAnalytics in Frameworks */,
 				8B94EA072802A11F009A0D36 /* FirebaseCrashlytics in Frameworks */,
+				8B541063280E297700FD1A90 /* SDWebImageSwiftUI in Frameworks */,
 				8B94EA052802A11F009A0D36 /* FirebaseAuth in Frameworks */,
 				8B94EA0B2802A11F009A0D36 /* FirebaseFirestoreSwift-Beta in Frameworks */,
 				8B94EA0F2802A11F009A0D36 /* FirebaseStorage in Frameworks */,
@@ -79,6 +89,37 @@
 				8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8B54105A280E1EE600FD1A90 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8B541056280E1C5100FD1A90 /* Book.swift */,
+				8B541058280E1ED300FD1A90 /* User.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8B54105D280E25FC00FD1A90 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8B7C61F72807F20100A0E97F /* RootView.swift */,
+				8B7C61F92807F21B00A0E97F /* LibraryView.swift */,
+				8B7C61FB2807F22900A0E97F /* SearchView.swift */,
+				8B7C61FD2807F23700A0E97F /* NotesView.swift */,
+				8B7C61FF2807F24300A0E97F /* ProfileView.swift */,
+				8B7C61F62807F1EA00A0E97F /* Onboarding */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8B54105E280E260700FD1A90 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				8B54105B280E1FD400FD1A90 /* BooksAPI.swift */,
+				8B54105F280E261500FD1A90 /* SwiftyJSON.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		8B5A6F9427FDD799003F56C7 = {
@@ -106,12 +147,9 @@
 				8B94EA102802A14D009A0D36 /* AppDelegate.swift */,
 				8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */,
 				8B1D86C0280CA2270051F712 /* LoadingView.swift */,
-				8B7C61F62807F1EA00A0E97F /* Onboarding */,
-				8B7C61F72807F20100A0E97F /* RootView.swift */,
-				8B7C61F92807F21B00A0E97F /* LibraryView.swift */,
-				8B7C61FB2807F22900A0E97F /* SearchView.swift */,
-				8B7C61FD2807F23700A0E97F /* NotesView.swift */,
-				8B7C61FF2807F24300A0E97F /* ProfileView.swift */,
+				8B54105E280E260700FD1A90 /* Helpers */,
+				8B54105A280E1EE600FD1A90 /* Models */,
+				8B54105D280E25FC00FD1A90 /* Views */,
 				8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */,
 				8B94E9FF2802A06D009A0D36 /* GoogleService-Info.plist */,
 				8B5A6FA627FDD79D003F56C7 /* Preview Content */,
@@ -162,6 +200,7 @@
 				8B94EA0A2802A11F009A0D36 /* FirebaseFirestoreSwift-Beta */,
 				8B94EA0C2802A11F009A0D36 /* FirebasePerformance */,
 				8B94EA0E2802A11F009A0D36 /* FirebaseStorage */,
+				8B541062280E297700FD1A90 /* SDWebImageSwiftUI */,
 			);
 			productName = Athena;
 			productReference = 8B5A6F9D27FDD799003F56C7 /* Athena.app */;
@@ -193,6 +232,7 @@
 			mainGroup = 8B5A6F9427FDD799003F56C7;
 			packageReferences = (
 				8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 8B5A6F9E27FDD799003F56C7 /* Products */;
 			projectDirPath = "";
@@ -227,11 +267,15 @@
 				8B94E9FE28029E56009A0D36 /* OnboardingFour.swift in Sources */,
 				8B7C61F82807F20100A0E97F /* RootView.swift in Sources */,
 				8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */,
+				8B541059280E1ED300FD1A90 /* User.swift in Sources */,
 				8B7C61FC2807F22900A0E97F /* SearchView.swift in Sources */,
 				8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */,
+				8B54105C280E1FD400FD1A90 /* BooksAPI.swift in Sources */,
 				071516C92805FC740025F373 /* OnboardingThree.swift in Sources */,
+				8B541060280E261500FD1A90 /* SwiftyJSON.swift in Sources */,
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
 				8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */,
+				8B541057280E1C5100FD1A90 /* Book.swift in Sources */,
 				8B7C61FE2807F23700A0E97F /* NotesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -441,6 +485,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -452,6 +504,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8B541062280E297700FD1A90 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		8B94EA022802A11F009A0D36 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
