@@ -36,6 +36,7 @@
 		8B94EA0D2802A11F009A0D36 /* FirebasePerformance in Frameworks */ = {isa = PBXBuildFile; productRef = 8B94EA0C2802A11F009A0D36 /* FirebasePerformance */; };
 		8B94EA0F2802A11F009A0D36 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 8B94EA0E2802A11F009A0D36 /* FirebaseStorage */; };
 		8B94EA112802A14D009A0D36 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B94EA102802A14D009A0D36 /* AppDelegate.swift */; };
+		8BBB1DA62810644400644434 /* SearchTerm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BBB1DA52810644400644434 /* SearchTerm.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		8B94E9FF2802A06D009A0D36 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8B94EA102802A14D009A0D36 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B94EA122802A4CF009A0D36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8BBB1DA52810644400644434 /* SearchTerm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTerm.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			children = (
 				8B541056280E1C5100FD1A90 /* Book.swift */,
 				8B541058280E1ED300FD1A90 /* User.swift */,
+				8BBB1DA52810644400644434 /* SearchTerm.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -267,6 +270,7 @@
 				8B7C61FA2807F21B00A0E97F /* LibraryView.swift in Sources */,
 				8B94EA112802A14D009A0D36 /* AppDelegate.swift in Sources */,
 				8B747244280FC524006633FF /* DetailView.swift in Sources */,
+				8BBB1DA62810644400644434 /* SearchTerm.swift in Sources */,
 				8B7C62002807F24300A0E97F /* ProfileView.swift in Sources */,
 				8B94E9FE28029E56009A0D36 /* OnboardingFour.swift in Sources */,
 				8B7C61F82807F20100A0E97F /* RootView.swift in Sources */,
