@@ -8,11 +8,14 @@
 import SwiftUI
 import UIKit
 import SDWebImageSwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct SearchView: View {
     @State private var searchTerm = ""
     private let booksManager = GoogleBooksManager.shared
     @State private var bookResults = [Book]()
+    @State private var searchHistory = [SearchTerm]()
     
     var body: some View {
         NavigationView {
@@ -25,11 +28,11 @@ struct SearchView: View {
                         VStack(spacing: 16) {
                             Text("Search History")
                                 .font(.headline)
-                            ForEach(["greek mythology", "algorithms", "huffman", "don quixote"], id: \.self) { term in
+                            ForEach(searchHistory, id: \.self) { term in
                                 Button {
-                                    searchTerm = term
+                                    searchTerm = term.id
                                 } label: {
-                                    Text(term)
+                                    Text(term.id)
                                         .foregroundColor(.white)
                                 }
                                 .tint(.white)
@@ -95,7 +98,49 @@ struct SearchView: View {
             .navigationTitle("Search")
             .tint(.white)
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always))
-            
+            .onAppear {
+                Task {
+                    Firestore.firestore()
+                        .collection("private")
+                        .document(Auth.auth().currentUser!.uid)
+                        .addSnapshotListener { snapshot, error in
+                            if let data = snapshot?.data(), let history = data["history"] as? [[Any: Any]] {
+                                let convHistory = [SearchTerm]()
+                                for history in history {
+                                    convHistory.append(SearchTerm(id: history["id"], date: history["date"]))
+                                }
+                                searchHistory = convHistory
+                            } else {
+                                print("no conv")
+                            }
+                        }
+                }
+            }
+            .onSubmit(of: .search) {
+                Task {
+                    let ref = Firestore.firestore()
+                        .collection("private")
+                        .document(Auth.auth().currentUser!.uid)
+                    let doc = try await ref.getDocument()
+                    if let data = doc.data(), let history = data["searchHistory"] as? [SearchTerm] {
+                        
+                        var sortedHistory = history.sorted {$0.date > $1.date}
+                        if sortedHistory.contains(where: {$0.id == searchTerm}) {
+                            sortedHistory.removeAll(where: {$0.id == searchTerm})
+                        } else {
+                            if sortedHistory.count > 4 {
+                                sortedHistory.removeLast()
+                            }
+                        }
+                        sortedHistory.insert(SearchTerm(id: searchTerm, date: Date()), at: 0)
+                        
+                        try await ref
+                            .updateData([
+                                "searchHistory": sortedHistory.map { $0.convertToDict() }
+                            ])
+                    }
+                }
+            }
         }
     }
 }
