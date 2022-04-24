@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import SDWebImage
 
 struct ProfileView: View {
     @State private var email = Auth.auth().currentUser!.email
@@ -95,6 +96,7 @@ struct ProfileView: View {
                     }
                     Button {
                         // Clear Cache
+                        SDImageCache.shared.clear(with: .all)
                     } label: {
                         ZStack(alignment: .leading){
                             RoundedRectangle(cornerRadius: 0)

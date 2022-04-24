@@ -95,12 +95,11 @@ struct DetailView: View {
                         }
                     }
                     
-                    
-                    
                     // Book Description
                     Text(book.description)
                         .multilineTextAlignment(.leading)
                         .font(.system(size: 17, weight: .medium, design: .default))
+                        .lineLimit(10)
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 20)
