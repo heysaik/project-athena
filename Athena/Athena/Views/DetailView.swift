@@ -10,14 +10,13 @@ import SDWebImageSwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-enum DetailType {
-    case fromSearch, fromLibrary
-}
-
 struct DetailView: View {
-    var book: Book
-    var type: DetailType
     @State private var inLibrary = false
+    @State private var recommendedBooks = [Book]()
+    
+    private let booksManager = GoogleBooksManager.shared
+    
+    var book: Book
     
     var body: some View {
         ZStack {
@@ -41,32 +40,22 @@ struct DetailView: View {
                                 .multilineTextAlignment(.leading)
                             Text(book.authors.formatted(.list(type: .and)))
                                 .font(.caption)
-                            
-                            HStack {
-                                Image(systemName: "star.fill")
-                                Image(systemName: "star.fill")
-                                Image(systemName: "star.fill")
-                                Image(systemName: "star.fill")
-                                Image(systemName: "star.fill")
-                            }
-                            .foregroundColor(Color.yellow)
+                            StarsView(rating: book.googleBooksRating)
+                                .foregroundColor(Color.yellow)
                         }
                     }
                     
-                    if type == .fromSearch {
-                        // Book Description
-                        Text(book.description)
-                            .multilineTextAlignment(.leading)
-                            .font(.system(size: 17, weight: .medium, design: .default))
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundColor(.black.opacity(0.25))
-                            )
+                    if inLibrary {
+                        // TODO: Progress Circle
                         
                         // Buttons
                         HStack {
-                            // Add to Library Button
+                            // TODO: Mark as Completed Button
+                            
+                            // TODO: Update Progress Button
+                        }
+                    } else {
+                        HStack {
                             Spacer()
                             Button {
                                 if !inLibrary {
@@ -104,24 +93,61 @@ struct DetailView: View {
                             }
                             Spacer()
                         }
-                    } else if type == .fromLibrary {
-                        // TODO: Progress Circle
-                        
-                        // Buttons
-                        HStack {
-                            // TODO: Mark as Completed Button
-                            
-                            // TODO: Update Progress Button
-                        }
                     }
                     
-                    if book.authors.count > 0 {
+                    
+                    
+                    // Book Description
+                    Text(book.description)
+                        .multilineTextAlignment(.leading)
+                        .font(.system(size: 17, weight: .medium, design: .default))
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .foregroundColor(.black.opacity(0.25))
+                        )
+                    
+                    if recommendedBooks.count > 0 {
                         // Recommendations
-                        Text("More from \(book.authors.first!)")
+                        VStack(alignment: .leading, spacing: 16) {
+                            Text("More from \(book.authors.first!)")
+                                .font(.system(size: 20, weight: .semibold, design: .default))
+                            
+                            ScrollView(.horizontal) {
+                                HStack(alignment: .top, spacing: 16) {
+                                    ForEach(recommendedBooks) { book in
+                                        NavigationLink(destination: {
+                                            DetailView(book: book)
+                                        }, label: {
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                WebImage(url: URL(string: book.imageLink))
+                                                    .resizable()
+                                                    .frame(width: 104, height: 157, alignment: .center)
+                                                    .aspectRatio(contentMode: .fill)
+                                                    .cornerRadius(3, corners: [.topLeft, .bottomLeft])
+                                                    .cornerRadius(10, corners: [.bottomRight, .topRight])
+                                                    .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+                                                Text(book.title)
+                                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                                    .foregroundColor(.white)
+                                                    .multilineTextAlignment(.leading)
+                                                    .frame(maxHeight: .infinity)
+                                            }
+                                            .frame(width: 104)
+                                            .frame(maxHeight: .infinity)
+                                        })
+                                        .padding(.bottom)
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        Text("No more books from \(book.authors.first!)")
                             .font(.system(size: 20, weight: .semibold, design: .default))
+                            .padding(.bottom)
                     }
                 }
-                .padding()
+                .padding([.horizontal, .top])
             }
         }
         .navigationTitle("Details")
@@ -145,17 +171,24 @@ struct DetailView: View {
                         } else {
                             inLibrary = false
                         }
-
                     } catch {
                         print("error failed")
                     }
                 }
+            
+            if book.authors.count > 0 {
+                Task {
+                    var booksFromAuthor = try await booksManager.recommendedBooks(from: book.authors.first!)
+                    booksFromAuthor.removeAll(where: {$0.id == self.book.id})
+                    self.recommendedBooks = booksFromAuthor
+                }
+            }
         }
     }
 }
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(book: Book(id: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: ""), type: .fromLibrary)
+        DetailView(book: Book(id: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "", googleBooksRating: 5))
     }
 }
