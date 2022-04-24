@@ -11,7 +11,10 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct DetailView: View {
+    @State private var inWishlist = false
     @State private var inLibrary = false
+    @State private var inRead = false
+    @State private var showLibrarySheet = false
     @State private var recommendedBooks = [Book]()
     
     private let booksManager = GoogleBooksManager.shared
@@ -40,48 +43,40 @@ struct DetailView: View {
                                 .multilineTextAlignment(.leading)
                             Text(book.authors.formatted(.list(type: .and)))
                                 .font(.caption)
-                            StarsView(rating: book.googleBooksRating)
+                            StarsView(rating: book.googleBooksRating ?? 0.0)
                                 .foregroundColor(Color.yellow)
                         }
                     }
                     
                     if inLibrary {
-                        // TODO: Progress Circle
-                        
                         // Buttons
                         HStack {
-                            // TODO: Mark as Completed Button
-                            
-                            // TODO: Update Progress Button
-                        }
-                    } else {
-                        HStack {
-                            Spacer()
                             Button {
-                                if !inLibrary {
-                                    // Add to Library
-                                    let gen = UINotificationFeedbackGenerator()
-                                    
-                                    Task {
-                                        if let convertedBook = book.convertToDict() {
-                                            try await Firestore.firestore()
-                                                .collection("users")
-                                                .document(Auth.auth().currentUser!.uid)
-                                                .updateData([
-                                                    "currentlyReading": FieldValue.arrayUnion([
-                                                        convertedBook
-                                                    ])
-                                                ])
-                                            gen.notificationOccurred(.success)
-                                        } else {
-                                            // Print Error
-                                            gen.notificationOccurred(.error)
-                                        }
+                                // Mark as Completed
+                                let gen = UINotificationFeedbackGenerator()
+                                
+                                Task {
+                                    if let convertedBook = book.convertToDict() {
+                                        try await Firestore.firestore()
+                                            .collection("users")
+                                            .document(Auth.auth().currentUser!.uid)
+                                            .updateData([
+                                                "alreadyRead": FieldValue.arrayUnion([
+                                                    convertedBook
+                                                ]),
+                                                "currentlyReading": FieldValue.arrayRemove([
+                                                    convertedBook
+                                                ]),
+                                            ])
+                                        gen.notificationOccurred(.success)
+                                    } else {
+                                        // Print Error
+                                        gen.notificationOccurred(.error)
                                     }
                                 }
                             } label: {
-                                Label(inLibrary ? "Added to Library" : "Add to Library", systemImage: inLibrary ? "checkmark.circle.fill" : "plus.circle.fill")
-                                    .font(.system(size: 18, weight: .bold, design: .default))
+                                Label("Mark as Completed", systemImage: "checkmark.circle.fill")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -92,6 +87,123 @@ struct DetailView: View {
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
                             }
                             Spacer()
+                            
+                            Button {
+                                // TODO: Update Progress
+                            } label: {
+                                Text("TODO:")
+                            }
+                        }
+                        
+                        // TODO: Progress Circle
+                    } else if inRead {
+                        HStack {
+                            Spacer()
+                            Button {
+                                let gen = UINotificationFeedbackGenerator()
+
+                                // Remove from Read
+                                Task {
+                                    if let convertedBook = book.convertToDict() {
+                                        try await Firestore.firestore()
+                                            .collection("users")
+                                            .document(Auth.auth().currentUser!.uid)
+                                            .updateData([
+                                                "alreadyRead": FieldValue.arrayRemove([
+                                                    convertedBook
+                                                ])
+                                            ])
+                                        gen.notificationOccurred(.success)
+                                    } else {
+                                        // Print Error
+                                        gen.notificationOccurred(.error)
+                                    }
+                                }
+                            } label: {
+                                Label("Remove from Already Read", systemImage: "rectangle.stack.fill.badge.minus")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                            }
+                            Spacer()
+                        }
+                    } else if inWishlist {
+                        HStack {
+                            Spacer()
+                            Button {
+                                // Show Wishlist-Based Popup
+                                showLibrarySheet.toggle()
+                            } label: {
+                                Label("In Wishlist", systemImage: "checkmark.circle.fill")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                            }
+                            Spacer()
+                        }
+                    } else {
+                        // Not in anything
+                        HStack {
+                            Button {
+                                // Add to Wishlist
+                                let gen = UINotificationFeedbackGenerator()
+                                
+                                Task {
+                                    if let convertedBook = book.convertToDict() {
+                                        try await Firestore.firestore()
+                                            .collection("users")
+                                            .document(Auth.auth().currentUser!.uid)
+                                            .updateData([
+                                                "wishlist": FieldValue.arrayUnion([
+                                                    convertedBook
+                                                ])
+                                            ])
+                                        gen.notificationOccurred(.success)
+                                    } else {
+                                        // Print Error
+                                        gen.notificationOccurred(.error)
+                                    }
+                                }
+                            } label: {
+                                Label("Add to Wishlist", systemImage: "cart.fill.badge.plus")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                            }
+                            Spacer()
+                            Button {
+                                // Add to Library
+                                self.showLibrarySheet.toggle()
+                            } label: {
+                                Label("Add to Library", systemImage: "rectangle.stack.fill.badge.plus")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                            }
                         }
                     }
                     
@@ -151,6 +263,85 @@ struct DetailView: View {
         }
         .navigationTitle("Details")
         .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog("Add to Library", isPresented: $showLibrarySheet, actions: {
+            if inWishlist {
+                // Remove from Wishlist
+                Button(role: .destructive) {
+                    let gen = UINotificationFeedbackGenerator()
+                    
+                    Task {
+                        if let convertedBook = book.convertToDict() {
+                            try await Firestore.firestore()
+                                .collection("users")
+                                .document(Auth.auth().currentUser!.uid)
+                                .updateData([
+                                    "wishlist": FieldValue.arrayRemove([
+                                        convertedBook
+                                    ])
+                                ])
+                            gen.notificationOccurred(.success)
+                        } else {
+                            // Print Error
+                            gen.notificationOccurred(.error)
+                        }
+                    }
+                } label: {
+                    Text("Remove from Wishlist")
+                    
+                }
+            }
+            
+            if !inLibrary || inWishlist {
+                // Add to Library
+                Button {
+                    let gen = UINotificationFeedbackGenerator()
+                    
+                    Task {
+                        if let convertedBook = book.convertToDict() {
+                            try await Firestore.firestore()
+                                .collection("users")
+                                .document(Auth.auth().currentUser!.uid)
+                                .updateData([
+                                    "currentlyReading": FieldValue.arrayUnion([
+                                        convertedBook
+                                    ])
+                                ])
+                            gen.notificationOccurred(.success)
+                        } else {
+                            // Print Error
+                            gen.notificationOccurred(.error)
+                        }
+                    }
+                } label: {
+                    Text("I'm reading this")
+                }
+            }
+            
+            // Mark as Read
+            Button {
+                let gen = UINotificationFeedbackGenerator()
+                
+                Task {
+                    if let convertedBook = book.convertToDict() {
+                        try await Firestore.firestore()
+                            .collection("users")
+                            .document(Auth.auth().currentUser!.uid)
+                            .updateData([
+                                "alreadyRead": FieldValue.arrayUnion([
+                                    convertedBook
+                                ])
+                            ])
+                        gen.notificationOccurred(.success)
+                    } else {
+                        // Print Error
+                        gen.notificationOccurred(.error)
+                    }
+                }
+            } label: {
+                Text("Mark as read")
+            }
+            
+        })
         .onAppear {
             Firestore
                 .firestore()
@@ -165,13 +356,11 @@ struct DetailView: View {
                     do {
                         let data = try document.data(as: User.self)
                         
-                        if data.currentlyReading.contains(book) || data.alreadyRead.contains(book) || data.wishlist.contains(book) {
-                            inLibrary = true
-                        } else {
-                            inLibrary = false
-                        }
-                    } catch {
-                        print("error failed")
+                        self.inLibrary = data.currentlyReading.contains(book)
+                        self.inRead = data.alreadyRead.contains(book)
+                        self.inWishlist = data.wishlist.contains(book)
+                    } catch let error {
+                        print("Could not convert data: \(error.localizedDescription)")
                     }
                 }
             
