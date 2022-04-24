@@ -20,6 +20,7 @@ struct Book: Identifiable, Convertable, Equatable {
     var isbn13: String?
     var isbn10: String?
     var imageLink: String
+    var googleBooksRating: Float
 }
 
 protocol Convertable: Codable {}
