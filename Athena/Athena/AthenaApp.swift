@@ -15,6 +15,7 @@ struct AthenaApp: App {
     var body: some Scene {
         WindowGroup {
             if Auth.auth().currentUser == nil {
+//                test change
                 OnboardingOne()
             } else {
                 RootView()
