@@ -28,20 +28,28 @@ final class GoogleBooksManager {
         if let books = (result["items"]).array {
             var results = [Book]()
             for book in books {
-                results.append(
-                    Book(
-                        id: book["id"].stringValue,
-                        title: book["volumeInfo"]["title"].stringValue,
-                        authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
-                        publisher: book["volumeInfo"]["publisher"].stringValue,
-                        publishedDate: book["volumeInfo"]["publishedDate"].stringValue,
-                        description: book["volumeInfo"]["description"].stringValue,
-                        pageCount: book["volumeInfo"]["pageCount"].intValue,
-                        categories: book["volumeInfo"]["categories"].arrayObject as? [String] ?? [],
-                        imageLink: book["volumeInfo"]["imageLinks"]["thumbnail"].stringValue,
-                        googleBooksRating: book["volumeInfo"]["averageRating"].floatValue
-                    )
+                var b = Book(
+                    id: book["id"].stringValue,
+                    title: book["volumeInfo"]["title"].stringValue,
+                    authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
+                    publisher: book["volumeInfo"]["publisher"].stringValue,
+                    publishedDate: book["volumeInfo"]["publishedDate"].stringValue,
+                    description: book["volumeInfo"]["description"].stringValue,
+                    pageCount: book["volumeInfo"]["pageCount"].intValue,
+                    categories: book["volumeInfo"]["categories"].arrayObject as? [String] ?? [],
+                    imageLink: book["volumeInfo"]["imageLinks"]["thumbnail"].stringValue,
+                    googleBooksRating: book["volumeInfo"]["averageRating"].floatValue
                 )
+                let identifiers = book["volumeInfo"]["industryIdentifiers"].arrayValue
+                for identifier in identifiers {
+                    if identifier["type"] == "ISBN_13" {
+                        b.isbn13 = identifier["identifier"].stringValue
+                    } else if identifier["type"] == "ISBN_10" {
+                        b.isbn10 = identifier["identifier"].stringValue
+                    }
+                }
+                
+                results.append(b)
             }
             return results
         } else {
@@ -59,20 +67,28 @@ final class GoogleBooksManager {
         if let books = (result["items"]).array {
             var results = [Book]()
             for book in books {
-                results.append(
-                    Book(
-                        id: book["id"].stringValue,
-                        title: book["volumeInfo"]["title"].stringValue,
-                        authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
-                        publisher: book["volumeInfo"]["publisher"].stringValue,
-                        publishedDate: book["volumeInfo"]["publishedDate"].stringValue,
-                        description: book["volumeInfo"]["description"].stringValue,
-                        pageCount: book["volumeInfo"]["pageCount"].intValue,
-                        categories: book["volumeInfo"]["categories"].arrayObject as? [String] ?? [],
-                        imageLink: book["volumeInfo"]["imageLinks"]["thumbnail"].stringValue,
-                        googleBooksRating: book["volumeInfo"]["averageRating"].floatValue
-                    )
+                var b = Book(
+                    id: book["id"].stringValue,
+                    title: book["volumeInfo"]["title"].stringValue,
+                    authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
+                    publisher: book["volumeInfo"]["publisher"].stringValue,
+                    publishedDate: book["volumeInfo"]["publishedDate"].stringValue,
+                    description: book["volumeInfo"]["description"].stringValue,
+                    pageCount: book["volumeInfo"]["pageCount"].intValue,
+                    categories: book["volumeInfo"]["categories"].arrayObject as? [String] ?? [],
+                    imageLink: book["volumeInfo"]["imageLinks"]["thumbnail"].stringValue,
+                    googleBooksRating: book["volumeInfo"]["averageRating"].floatValue
                 )
+                let identifiers = book["volumeInfo"]["industryIdentifiers"].arrayValue
+                for identifier in identifiers {
+                    if identifier["type"] == "ISBN_13" {
+                        b.isbn13 = identifier["identifier"].stringValue
+                    } else if identifier["type"] == "ISBN_10" {
+                        b.isbn10 = identifier["identifier"].stringValue
+                    }
+                }
+                
+                results.append(b)
             }
             return results
         } else {
