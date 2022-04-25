@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct NotesView: View {
-    var notesArray = ["TITLE OF BOOK", "INTERESTING QUOTES", "ANNOTATIONS"]
-    @State var goWhenTrue: Bool = false
     var body: some View {
         NavigationView {
             ZStack {
