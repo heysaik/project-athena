@@ -24,7 +24,7 @@ struct NotesView: View {
                 VStack(alignment: .leading, spacing: 1) {
                     Spacer()
                     
-                    Text("Currently Reading")
+                    Text("Currently Reading")  //split into two categories
                         .font(.system(size: 25, design: .rounded))
                         .foregroundColor(.white)
                         .padding(.vertical, 5)
