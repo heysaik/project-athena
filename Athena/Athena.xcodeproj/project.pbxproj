@@ -21,6 +21,7 @@
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
 		8B5A6FA827FDD79D003F56C7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */; };
 		8B747244280FC524006633FF /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B747243280FC523006633FF /* DetailView.swift */; };
+		8B7B98CB2816F2CF001E1D4D /* CollectionViewPagingLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7B98CA2816F2CF001E1D4D /* CollectionViewPagingLayout */; };
 		8B7C61F82807F20100A0E97F /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61F72807F20100A0E97F /* RootView.swift */; };
 		8B7C61FA2807F21B00A0E97F /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61F92807F21B00A0E97F /* LibraryView.swift */; };
 		8B7C61FC2807F22900A0E97F /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61FB2807F22900A0E97F /* SearchView.swift */; };
@@ -77,6 +78,7 @@
 				8B94EA0D2802A11F009A0D36 /* FirebasePerformance in Frameworks */,
 				8B94EA032802A11F009A0D36 /* FirebaseAnalytics in Frameworks */,
 				8B94EA072802A11F009A0D36 /* FirebaseCrashlytics in Frameworks */,
+				8B7B98CB2816F2CF001E1D4D /* CollectionViewPagingLayout in Frameworks */,
 				8B541063280E297700FD1A90 /* SDWebImageSwiftUI in Frameworks */,
 				8B94EA052802A11F009A0D36 /* FirebaseAuth in Frameworks */,
 				8B94EA0B2802A11F009A0D36 /* FirebaseFirestoreSwift-Beta in Frameworks */,
@@ -218,6 +220,7 @@
 				8B94EA0C2802A11F009A0D36 /* FirebasePerformance */,
 				8B94EA0E2802A11F009A0D36 /* FirebaseStorage */,
 				8B541062280E297700FD1A90 /* SDWebImageSwiftUI */,
+				8B7B98CA2816F2CF001E1D4D /* CollectionViewPagingLayout */,
 			);
 			productName = Athena;
 			productReference = 8B5A6F9D27FDD799003F56C7 /* Athena.app */;
@@ -250,6 +253,7 @@
 			packageReferences = (
 				8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				8B7B98C92816F2CF001E1D4D /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */,
 			);
 			productRefGroup = 8B5A6F9E27FDD799003F56C7 /* Products */;
 			projectDirPath = "";
@@ -513,6 +517,14 @@
 				kind = branch;
 			};
 		};
+		8B7B98C92816F2CF001E1D4D /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amirdew/CollectionViewPagingLayout";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -528,6 +540,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
+		};
+		8B7B98CA2816F2CF001E1D4D /* CollectionViewPagingLayout */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B7B98C92816F2CF001E1D4D /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */;
+			productName = CollectionViewPagingLayout;
 		};
 		8B94EA022802A11F009A0D36 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
