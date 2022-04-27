@@ -12,6 +12,8 @@ import FirebaseFirestore
 struct ProfileView: View {
     @State private var email = Auth.auth().currentUser!.email
     @State private var showAlreadyRead = true
+    @State private var showLogoutAlert = false
+    @State private var loggedOut = false
     
     var body: some View {
         NavigationView{
@@ -162,6 +164,7 @@ struct ProfileView: View {
                         Spacer()
                         Button {
                             // Log out of proifle
+                            showLogoutAlert = true
                         } label: {
                             ZStack(alignment: .center){
                                 RoundedRectangle(cornerRadius: 50)
@@ -172,6 +175,14 @@ struct ProfileView: View {
                                     .foregroundColor(.white)
                             }
                         }
+                        .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
+                            Button("Yes") {
+                                loggedOut = true
+                                do { try Auth.auth().signOut() }
+                                catch { print("already logged out") }
+                            }
+                            Button("No") { }
+                        }
                         Spacer()
                     }
                     .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
@@ -180,6 +191,10 @@ struct ProfileView: View {
                 .padding(.horizontal)
             }
             .navigationTitle("Profile")
+            .fullScreenCover(isPresented: $loggedOut) { // Shows OnboardingOne if the user logs out
+                            OnboardingOne()
+            }
+
         }
     }
 }
