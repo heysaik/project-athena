@@ -12,6 +12,7 @@ import SDWebImage
 
 struct ProfileView: View {
     @State private var email = Auth.auth().currentUser!.email
+    @State private var user = Auth.auth().currentUser
     @State private var showAlreadyRead = true
     @State private var showLogoutAlert = false
     @State private var loggedOut = false
@@ -40,8 +41,9 @@ struct ProfileView: View {
                                 .padding(10)
                         }
                     }
-                    Button {
+                    NavigationLink {
                         // Edit Email
+                        Change_Email()
                     } label: {
                         ZStack(alignment: .leading){
                             RoundedRectangle(cornerRadius: 0)
