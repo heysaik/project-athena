@@ -10,8 +10,10 @@
 		071516C92805FC740025F373 /* OnboardingThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071516C82805FC740025F373 /* OnboardingThree.swift */; };
 		07A69764281C87AF005A3B35 /* Change Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A69763281C87AF005A3B35 /* Change Email.swift */; };
 		8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0005432807EF0600ED855C /* OnboardingTwo.swift */; };
+		8B0F0302282226E5007B5DB1 /* TextfieldAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */; };
 		8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1D86C0280CA2270051F712 /* LoadingView.swift */; };
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
+		8B4F2D292821B3080011D33D /* ProgressCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4F2D282821B3080011D33D /* ProgressCircleView.swift */; };
 		8B541057280E1C5100FD1A90 /* Book.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B541056280E1C5100FD1A90 /* Book.swift */; };
 		8B541059280E1ED300FD1A90 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B541058280E1ED300FD1A90 /* User.swift */; };
 		8B54105C280E1FD400FD1A90 /* BooksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B54105B280E1FD400FD1A90 /* BooksAPI.swift */; };
@@ -46,9 +48,11 @@
 		071516C82805FC740025F373 /* OnboardingThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThree.swift; sourceTree = "<group>"; };
 		07A69763281C87AF005A3B35 /* Change Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Change Email.swift"; sourceTree = "<group>"; };
 		8B0005432807EF0600ED855C /* OnboardingTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTwo.swift; sourceTree = "<group>"; };
+		8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextfieldAlertView.swift; sourceTree = "<group>"; };
 		8B1D86C0280CA2270051F712 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
 		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		8B4F2D282821B3080011D33D /* ProgressCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCircleView.swift; sourceTree = "<group>"; };
 		8B541056280E1C5100FD1A90 /* Book.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Book.swift; sourceTree = "<group>"; };
 		8B541058280E1ED300FD1A90 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		8B54105B280E1FD400FD1A90 /* BooksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooksAPI.swift; sourceTree = "<group>"; };
@@ -194,6 +198,8 @@
 			isa = PBXGroup;
 			children = (
 				8BCF15422814DE36000A375B /* StarsView.swift */,
+				8B4F2D282821B3080011D33D /* ProgressCircleView.swift */,
+				8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -300,7 +306,9 @@
 				8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */,
 				8B54105C280E1FD400FD1A90 /* BooksAPI.swift in Sources */,
 				071516C92805FC740025F373 /* OnboardingThree.swift in Sources */,
+				8B0F0302282226E5007B5DB1 /* TextfieldAlertView.swift in Sources */,
 				8B541060280E261500FD1A90 /* SwiftyJSON.swift in Sources */,
+				8B4F2D292821B3080011D33D /* ProgressCircleView.swift in Sources */,
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
 				8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */,
 				8B541057280E1C5100FD1A90 /* Book.swift in Sources */,

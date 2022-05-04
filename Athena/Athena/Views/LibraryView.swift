@@ -65,6 +65,7 @@ struct LibraryView: View {
                                             .cornerRadius(13, corners: [.bottomRight, .topRight])
     //                                        .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
                                     }
+                                    .buttonStyle(FlatLinkStyle())
                                     .aspectRatio(0.66, contentMode: .fit)
                                     .frame(width: geometry.size.width * 0.9)
                                 }
@@ -129,5 +130,11 @@ struct LibraryView: View {
 struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
         LibraryView()
+    }
+}
+
+struct FlatLinkStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
     }
 }
