@@ -10,7 +10,6 @@
 		071516C92805FC740025F373 /* OnboardingThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071516C82805FC740025F373 /* OnboardingThree.swift */; };
 		07A69764281C87AF005A3B35 /* Change Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A69763281C87AF005A3B35 /* Change Email.swift */; };
 		8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0005432807EF0600ED855C /* OnboardingTwo.swift */; };
-		8B0F0302282226E5007B5DB1 /* TextfieldAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */; };
 		8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1D86C0280CA2270051F712 /* LoadingView.swift */; };
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
 		8B4F2D292821B3080011D33D /* ProgressCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4F2D282821B3080011D33D /* ProgressCircleView.swift */; };
@@ -30,6 +29,7 @@
 		8B7C61FC2807F22900A0E97F /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61FB2807F22900A0E97F /* SearchView.swift */; };
 		8B7C61FE2807F23700A0E97F /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61FD2807F23700A0E97F /* NotesView.swift */; };
 		8B7C62002807F24300A0E97F /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61FF2807F24300A0E97F /* ProfileView.swift */; };
+		8B93FC8F28223B3800778AB1 /* AlertKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8B93FC8E28223B3800778AB1 /* AlertKit */; };
 		8B94E9FE28029E56009A0D36 /* OnboardingFour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B94E9FD28029E56009A0D36 /* OnboardingFour.swift */; };
 		8B94EA002802A06D009A0D36 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8B94E9FF2802A06D009A0D36 /* GoogleService-Info.plist */; };
 		8B94EA032802A11F009A0D36 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 8B94EA022802A11F009A0D36 /* FirebaseAnalytics */; };
@@ -48,7 +48,6 @@
 		071516C82805FC740025F373 /* OnboardingThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThree.swift; sourceTree = "<group>"; };
 		07A69763281C87AF005A3B35 /* Change Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Change Email.swift"; sourceTree = "<group>"; };
 		8B0005432807EF0600ED855C /* OnboardingTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTwo.swift; sourceTree = "<group>"; };
-		8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextfieldAlertView.swift; sourceTree = "<group>"; };
 		8B1D86C0280CA2270051F712 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
 		8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -91,6 +90,7 @@
 				8B94EA0F2802A11F009A0D36 /* FirebaseStorage in Frameworks */,
 				8B94EA092802A11F009A0D36 /* FirebaseFirestore in Frameworks */,
 				8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */,
+				8B93FC8F28223B3800778AB1 /* AlertKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +199,6 @@
 			children = (
 				8BCF15422814DE36000A375B /* StarsView.swift */,
 				8B4F2D282821B3080011D33D /* ProgressCircleView.swift */,
-				8B0F0301282226E5007B5DB1 /* TextfieldAlertView.swift */,
 			);
 			path = "Helper Views";
 			sourceTree = "<group>";
@@ -230,6 +229,7 @@
 				8B94EA0E2802A11F009A0D36 /* FirebaseStorage */,
 				8B541062280E297700FD1A90 /* SDWebImageSwiftUI */,
 				8B7B98CA2816F2CF001E1D4D /* CollectionViewPagingLayout */,
+				8B93FC8E28223B3800778AB1 /* AlertKit */,
 			);
 			productName = Athena;
 			productReference = 8B5A6F9D27FDD799003F56C7 /* Athena.app */;
@@ -263,6 +263,7 @@
 				8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				8B541061280E297700FD1A90 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				8B7B98C92816F2CF001E1D4D /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */,
+				8B93FC8D28223B3800778AB1 /* XCRemoteSwiftPackageReference "AlertKit" */,
 			);
 			productRefGroup = 8B5A6F9E27FDD799003F56C7 /* Products */;
 			projectDirPath = "";
@@ -306,7 +307,6 @@
 				8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */,
 				8B54105C280E1FD400FD1A90 /* BooksAPI.swift in Sources */,
 				071516C92805FC740025F373 /* OnboardingThree.swift in Sources */,
-				8B0F0302282226E5007B5DB1 /* TextfieldAlertView.swift in Sources */,
 				8B541060280E261500FD1A90 /* SwiftyJSON.swift in Sources */,
 				8B4F2D292821B3080011D33D /* ProgressCircleView.swift in Sources */,
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
@@ -537,6 +537,14 @@
 				kind = branch;
 			};
 		};
+		8B93FC8D28223B3800778AB1 /* XCRemoteSwiftPackageReference "AlertKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rebeloper/AlertKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
 		8B94EA012802A11F009A0D36 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -557,6 +565,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8B7B98C92816F2CF001E1D4D /* XCRemoteSwiftPackageReference "CollectionViewPagingLayout" */;
 			productName = CollectionViewPagingLayout;
+		};
+		8B93FC8E28223B3800778AB1 /* AlertKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8B93FC8D28223B3800778AB1 /* XCRemoteSwiftPackageReference "AlertKit" */;
+			productName = AlertKit;
 		};
 		8B94EA022802A11F009A0D36 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;

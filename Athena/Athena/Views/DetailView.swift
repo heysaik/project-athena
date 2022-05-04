@@ -9,15 +9,18 @@ import SwiftUI
 import SDWebImageSwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import AlertKit
 
 struct DetailView: View {
+    @StateObject var alertManager = CustomAlertManager()
+
     @State private var inWishlist = false
     @State private var inLibrary = false
     @State private var inRead = false
     @State private var showLibrarySheet = false
     @State private var recommendedBooks = [Book]()
+    @State private var alertText = ""
     @State private var pagesRead = 0
-    @State private var showUpdateProgressField = false
     
     private let booksManager = GoogleBooksManager.shared
     
@@ -96,7 +99,7 @@ struct DetailView: View {
                             Spacer()
                             
                             Button {
-                                self.showUpdateProgressField.toggle()
+                                self.alertManager.show()
                             } label: {
                                 Label("Update Progress", systemImage: "circle.dashed")
                                     .font(.system(size: 15, weight: .bold, design: .default))
@@ -300,12 +303,26 @@ struct DetailView: View {
         }
         .navigationTitle("Details")
         .navigationBarTitleDisplayMode(.inline)
-        .alert(isPresented: $showUpdateProgressField, TextAlert(title: "Update Your Progress", placeholder: "Last Update: Page \(book.pagesRead ?? 0)", message: "Add the page you stopped on", accept: "Update", cancel: "Cancel", action: { str in
-            if let pageInString = str {
-                let page = Int(pageInString)
-                self.pagesRead = page!
+        .customAlert(manager: alertManager, content: {
+            VStack {
+                Text("Update Your Progress").bold()
+                Text("Add the page you stopped on")
+                TextField("Last Update: Page \(book.pagesRead ?? 0)", text: $alertText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
             }
-        }, keyboardType: .numberPad))
+        }, buttons: [
+            .cancel(content: {
+                Text("Cancel")
+            }),
+            .regular(content: {
+                Text("Update")
+            }, action: {
+                if let page = Int(alertText) {
+                    self.pagesRead = page
+                }
+            })
+        ])
         .confirmationDialog("Add to Library", isPresented: $showLibrarySheet, actions: {
             if inWishlist {
                 // Remove from Wishlist
