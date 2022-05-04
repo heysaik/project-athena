@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "alertkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rebeloper/AlertKit.git",
+      "state" : {
+        "revision" : "be3d9f6ca6ff5962057634795c9335b14b16ebdc",
+        "version" : "0.2.0"
+      }
+    },
+    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",

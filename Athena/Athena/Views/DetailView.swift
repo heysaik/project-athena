@@ -9,17 +9,27 @@ import SwiftUI
 import SDWebImageSwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import AlertKit
 
 struct DetailView: View {
+    @StateObject var alertManager = CustomAlertManager()
+
     @State private var inWishlist = false
     @State private var inLibrary = false
     @State private var inRead = false
     @State private var showLibrarySheet = false
     @State private var recommendedBooks = [Book]()
+    @State private var alertText = ""
+    @State private var pagesRead = 0
     
     private let booksManager = GoogleBooksManager.shared
     
-    var book: Book
+    @State private var oldBooks = [Book]()
+    @State private var book: Book = Book(id: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")
+    
+    init(book: Book) {
+        self._book = State(wrappedValue: book)
+    }
     
     var body: some View {
         ZStack {
@@ -89,13 +99,27 @@ struct DetailView: View {
                             Spacer()
                             
                             Button {
-                                // TODO: Update Progress
+                                self.alertManager.show()
                             } label: {
-                                Text("TODO:")
+                                Label("Update Progress", systemImage: "circle.dashed")
+                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
                             }
                         }
                         
                         // TODO: Progress Circle
+                        HStack {
+                            Spacer()
+                            ProgressCircleView(current: $pagesRead, total: book.pageCount)
+                            Spacer()
+                        }
                     } else if inRead {
                         HStack {
                             Spacer()
@@ -208,15 +232,31 @@ struct DetailView: View {
                     }
                     
                     // Book Description
-                    Text(book.description)
-                        .multilineTextAlignment(.leading)
-                        .font(.system(size: 17, weight: .medium, design: .default))
-                        .lineLimit(10)
-                        .padding()
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(.black.opacity(0.25))
-                        )
+                    NavigationLink {
+                        ZStack {
+                            LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
+                                .edgesIgnoringSafeArea(.all)
+                            
+                            ScrollView {
+                                Text(book.description)
+                                    .multilineTextAlignment(.leading)
+                                    .font(.system(size: 17, weight: .medium, design: .default))
+                                    .padding()
+                            }
+                            .navigationBarTitle("About the Book")
+                        }
+                    } label: {
+                        Text(book.description)
+                            .multilineTextAlignment(.leading)
+                            .font(.system(size: 17, weight: .medium, design: .default))
+                            .foregroundColor(.white)
+                            .lineLimit(10)
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .foregroundColor(.black.opacity(0.25))
+                            )
+                    }
                     
                     if recommendedBooks.count > 0 {
                         // Recommendations
@@ -263,6 +303,26 @@ struct DetailView: View {
         }
         .navigationTitle("Details")
         .navigationBarTitleDisplayMode(.inline)
+        .customAlert(manager: alertManager, content: {
+            VStack {
+                Text("Update Your Progress").bold()
+                Text("Add the page you stopped on")
+                TextField("Last Update: Page \(book.pagesRead ?? 0)", text: $alertText)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .keyboardType(.numberPad)
+            }
+        }, buttons: [
+            .cancel(content: {
+                Text("Cancel")
+            }),
+            .regular(content: {
+                Text("Update")
+            }, action: {
+                if let page = Int(alertText) {
+                    self.pagesRead = page
+                }
+            })
+        ])
         .confirmationDialog("Add to Library", isPresented: $showLibrarySheet, actions: {
             if inWishlist {
                 // Remove from Wishlist
@@ -304,6 +364,9 @@ struct DetailView: View {
                                 .updateData([
                                     "currentlyReading": FieldValue.arrayUnion([
                                         convertedBook
+                                    ]),
+                                    "wishlist": FieldValue.arrayRemove([
+                                        convertedBook
                                     ])
                                 ])
                             gen.notificationOccurred(.success)
@@ -322,6 +385,8 @@ struct DetailView: View {
                 let gen = UINotificationFeedbackGenerator()
                 
                 Task {
+                    oldBooks.append(book)
+                    book.pagesRead = book.pageCount
                     if let convertedBook = book.convertToDict() {
                         try await Firestore.firestore()
                             .collection("users")
@@ -343,33 +408,102 @@ struct DetailView: View {
             
         })
         .onAppear {
-            Firestore
+            // Set Pages Read
+            self.pagesRead = book.pagesRead ?? 0
+            
+            // Find out which library it is in
+            sortByLibrary()
+            
+            getRecommendedAuthors()
+        }
+        .onDisappear {
+            Task {
+                try await removeOldBooks()
+            }
+        }
+        .onChange(of: pagesRead) { pagesRead in
+            Task {
+                try await updateProgress(to: pagesRead)
+            }
+        }
+    }
+    
+    func getRecommendedAuthors() {
+        // Get recommended authors
+        if book.authors.count > 0 {
+            Task {
+                var booksFromAuthor = try await booksManager.recommendedBooks(from: book.authors.first!)
+                booksFromAuthor.removeAll(where: {$0.id == self.book.id})
+                self.recommendedBooks = booksFromAuthor
+            }
+        }
+    }
+    
+    func sortByLibrary() {
+        Firestore
+            .firestore()
+            .collection("users")
+            .document(Auth.auth().currentUser!.uid)
+            .addSnapshotListener { documentSnapshot, error in
+                guard let document = documentSnapshot else {
+                    print("Error fetching document: \(error!)")
+                    return
+                }
+                
+                do {
+                    let data = try document.data(as: User.self)
+                    
+                    self.inLibrary = data.currentlyReading.contains(book)
+                    self.inRead = data.alreadyRead.contains(book)
+                    self.inWishlist = data.wishlist.contains(book)
+                } catch let error {
+                    print("Could not convert data: \(error.localizedDescription)")
+                }
+            }
+    }
+    
+    func updateProgress(to page: Int) async throws {
+        oldBooks.append(book)
+        book.pagesRead = page
+
+        if let convertedBook = book.convertToDict() {
+            let doc = Firestore
                 .firestore()
                 .collection("users")
                 .document(Auth.auth().currentUser!.uid)
-                .addSnapshotListener { documentSnapshot, error in
-                    guard let document = documentSnapshot else {
-                        print("Error fetching document: \(error!)")
-                        return
-                    }
-                    
-                    do {
-                        let data = try document.data(as: User.self)
-                        
-                        self.inLibrary = data.currentlyReading.contains(book)
-                        self.inRead = data.alreadyRead.contains(book)
-                        self.inWishlist = data.wishlist.contains(book)
-                    } catch let error {
-                        print("Could not convert data: \(error.localizedDescription)")
-                    }
-                }
             
-            if book.authors.count > 0 {
-                Task {
-                    var booksFromAuthor = try await booksManager.recommendedBooks(from: book.authors.first!)
-                    booksFromAuthor.removeAll(where: {$0.id == self.book.id})
-                    self.recommendedBooks = booksFromAuthor
-                }
+            if self.inLibrary {
+                try await doc.updateData([
+                        "currentlyReading": FieldValue.arrayUnion([convertedBook])
+                    ])
+            } else if self.inRead {
+                try await doc.updateData([
+                        "alreadyRead": FieldValue.arrayUnion([convertedBook])
+                    ])
+            } else if self.inWishlist {
+                try await doc.updateData([
+                        "wishlist": FieldValue.arrayUnion([convertedBook])
+                    ])
+            } else {
+                print("NOT IN ANYTHING")
+            }
+        } else {
+            print("conv failed")
+        }
+    }
+    
+    func removeOldBooks() async throws {
+        let doc = Firestore
+            .firestore()
+            .collection("users")
+            .document(Auth.auth().currentUser!.uid)
+        for book in oldBooks {
+            if let convertedBook = book.convertToDict() {
+                try await doc.updateData([
+                    "currentlyReading": FieldValue.arrayRemove([convertedBook]),
+                    "alreadyRead": FieldValue.arrayRemove([convertedBook]),
+                    "wishlist": FieldValue.arrayRemove([convertedBook])
+                ])
             }
         }
     }
