@@ -97,7 +97,6 @@ struct SettingsView: View {
                             } label: {
                                 Label("Clear Cache", systemImage: "trash.slash.circle")
                                     .font(.system(size: 17, design: .rounded))
-                                
                             }
                         }
                         
