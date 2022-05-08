@@ -5,107 +5,100 @@
 //  Created by Sai Kambampati on 4/13/22.
 //
 
+
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct NotesView: View {
-    var notesArray = ["TITLE OF BOOK", "INTERESTING QUOTES", "ANNOTATIONS"]
-    @State var goWhenTrue: Bool = false
+    @State private var noteResults = [Note]()
+    @State private var searchTerm = ""
+
     var body: some View {
         NavigationView {
             ZStack {
                 LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                     .edgesIgnoringSafeArea(.all)
-                            .navigationTitle("Notes")
-                            .toolbar {
-                                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                                    Button("Create New Note") {
+                    
+                VStack {
+                    if noteResults.count == 0 {
+                        Spacer()
+                            Text("You have no notes")
+                                .font(.headline)
+                        Spacer()
+                    } else {
+                        ScrollView {
+                            ForEach(noteResults) { note in
+                                NavigationLink {
+                                    NotesDetailView(note: note)
+                                } label: {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(note.title)
+                                            .foregroundColor(.white)
+                                            .font(.system(.title3, design: .rounded).bold())
+                                            .multilineTextAlignment(.leading)
+                                            .lineLimit(0)
+                                        Text(note.note)
+                                            .foregroundColor(.white)
+                                            .font(.system(.body, design: .rounded))
+                                            .multilineTextAlignment(.leading)
+                                            .lineLimit(3)
+                                        Divider()
                                     }
+                                    .padding(.horizontal)
                                 }
                             }
-                VStack(alignment: .leading, spacing: 1) {
-                    Spacer()
-                    
-                    Text("Currently Reading")
-                        .font(.system(size: 25, design: .rounded))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 5)
-                            ScrollView {
-                                 NavigationLink(
-                                        destination:Text("TKAM NOTES"),
-                                        label: {
-                                        ZStack(alignment: .leading){
-                                            RoundedRectangle(cornerRadius: 0)
-                                                .frame(height: 35)
-                                                .foregroundColor(.white.opacity(0.2))
-                                            Text("To Kill a Mockingbird")
-                                                .font(.system(size: 20, design: .rounded)).bold()
-                                                .foregroundColor(.white)
-                                                .frame(alignment: .leading)
-                                                .padding(10)
-                                            
-                                        }
-                                })
-                                NavigationLink(
-                                    destination:Text("GSAW NOTES"),
-                                     label: {
-                                    ZStack(alignment: .leading){
-                                        RoundedRectangle(cornerRadius: 0)
-                                            .frame(height: 35)
-                                            .foregroundColor(.white.opacity(0.2))
-                                        Text("Go Set a Watchman")
-                                            .font(.system(size: 20, design: .rounded)).bold()
-                                            .foregroundColor(.white)
-                                            .frame(alignment: .leading)
-                                            .padding(10)
-                                        
-                                    }
-                                })
-                            }
-                        Divider()
-                        Text("Already Read")
-                            .font(.system(size: 25, design: .rounded))
-                            .foregroundColor(.white)
-                            .padding(.vertical, 5)
-                                    ScrollView {
-                                        NavigationLink(
-                                               destination:Text("TROAL NOTES"),
-                                               label: {
-                                                ZStack(alignment: .leading){
-                                                    RoundedRectangle(cornerRadius: 0)
-                                                        .frame(height: 35)
-                                                        .foregroundColor(.white.opacity(0.2))
-                                                    Text("The Ride of a Lifetime")
-                                                        .font(.system(size: 20, design: .rounded)).bold()
-                                                        .foregroundColor(.white)
-                                                        .frame(alignment: .leading)
-                                                        .padding(10)
-                                                }
-                                        })
-                                        NavigationLink(
-                                               destination:Text("CTBRD NOTES"),
-                                               label: {
-                                                ZStack(alignment: .leading){
-                                                    RoundedRectangle(cornerRadius: 0)
-                                                        .frame(height: 35)
-                                                        .foregroundColor(.white.opacity(0.2))
-                                                    Text("Clifford The Big Red Dog")
-                                                        .font(.system(size: 20, design: .rounded)).bold()
-                                                        .foregroundColor(.white)
-                                                        .frame(alignment: .leading)
-                                                        .padding(10)
-                                                }
-                                        })
-                                    }
+                        }
+                    }
                 }
             }
-            
+            .navigationTitle("Notes")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction, content: {
+                    NavigationLink {
+                        NotesEditView(note: Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date()))
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                })
+            }
+            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always))
+            .onAppear {
+                Firestore.firestore()
+                    .collection("notes")
+                    .whereField("creatorID", isEqualTo: Auth.auth().currentUser!.uid)
+                    .order(by: "editedAt", descending: true)
+                    .addSnapshotListener { querySnapshot, error in
+                        guard let snapshot = querySnapshot else {
+                            print("Error fetching snapshots: \(error!)")
+                            return
+                        }
+                        
+                        var newNotes = [Note]()
+                        for document in snapshot.documents {
+                            do {
+                                let document = try document.data(as: Note.self)
+                                newNotes.append(document)
+                            } catch let error {
+                                print(error.localizedDescription)
+                            }
+                        }
+                        newNotes.sort(by: {$0.editedAt > $1.editedAt})
+                        self.noteResults = newNotes
+                    }
+            }
+            .onSubmit(of: .search) {
+                Task {
+                    
+                }
+            }
         }
     }
 }
 
- 
 struct NotesView_Previews: PreviewProvider {
     static var previews: some View {
         NotesView()
     }
 }
+
