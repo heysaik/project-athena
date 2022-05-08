@@ -13,10 +13,9 @@ struct NotesView: View {
     @State private var notesText1 = ""
     @State private var notesText2 = ""
     @State private var notesText3 = ""
-        @State private var text = ""
+    @State private var text = ""
 
     var body: some View {
-        
         NavigationView {
             ZStack {
                 LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
@@ -54,6 +53,7 @@ struct NotesView: View {
                                             
                                     
                                 }
+
                                         label: {
                                         ZStack(alignment: .leading){
                                             RoundedRectangle(cornerRadius: 0)
@@ -93,6 +93,7 @@ struct NotesView: View {
                                         NavigationLink{
                                             TextEditor(text: $notesText2)
                                         }
+
                                                label: {
                                                 ZStack(alignment: .leading){
                                                     RoundedRectangle(cornerRadius: 0)
@@ -149,7 +150,6 @@ struct CustomTextEditor: View {
         }
     }
 }
- 
  
 struct NotesView_Previews: PreviewProvider {
     static var previews: some View {

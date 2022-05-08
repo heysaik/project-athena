@@ -10,12 +10,30 @@
       }
     },
     {
+      "identity" : "alertkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rebeloper/AlertKit.git",
+      "state" : {
+        "revision" : "be3d9f6ca6ff5962057634795c9335b14b16ebdc",
+        "version" : "0.2.0"
+      }
+    },
+    {
       "identity" : "boringssl-swiftpm",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/boringssl-SwiftPM.git",
       "state" : {
         "revision" : "734a8247442fde37df4364c21f6a0085b6a36728",
         "version" : "0.7.2"
+      }
+    },
+    {
+      "identity" : "collectionviewpaginglayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amirdew/CollectionViewPagingLayout",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4bdec327535470c8d9765d190625b13e99b87db5"
       }
     },
     {

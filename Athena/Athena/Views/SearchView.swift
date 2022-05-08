@@ -46,7 +46,7 @@ struct SearchView: View {
                                 VStack(spacing: 8) {
                                     ForEach(bookResults) { book in
                                         NavigationLink {
-                                            DetailView(book: book, type: .fromSearch)
+                                            DetailView(book: book)
                                         } label: {
                                             VStack(alignment: .leading) {
                                                 HStack {
