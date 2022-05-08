@@ -12,7 +12,6 @@ import CollectionViewPagingLayout
 import SDWebImageSwiftUI
 
 struct ProfileView: View {
-    @State private var email = Auth.auth().currentUser!.email
     @State private var user = Auth.auth().currentUser
     @State private var showAlreadyRead = true // If its false then it shows the wishlist
     @State private var wishlistedBooks = [Book]()
@@ -30,7 +29,7 @@ struct ProfileView: View {
                     LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                         .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(email!)
+                        Text(Auth.auth().currentUser!.email!)
                             .font(.system(size: 25, design: .rounded))
                             .foregroundColor(.white)
                         ScrollView {
