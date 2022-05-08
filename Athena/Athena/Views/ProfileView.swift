@@ -18,6 +18,7 @@ struct ProfileView: View {
     @State private var wishlistedBooks = [Book]()
     @State private var alreadyReadBooks = [Book]()
     @State private var selectedBookID: Book.ID? = nil
+    @State private var showSettingsView = false
   
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
@@ -234,6 +235,18 @@ struct ProfileView: View {
                                 }
                             }
                     }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction, content: {
+                        Button {
+                            self.showSettingsView.toggle()
+                        } label: {
+                            Image(systemName: "gear")
+                        }
+                    })
+                }
+                .sheet(isPresented: $showSettingsView) {
+                    SettingsView()
                 }
             }
         }
