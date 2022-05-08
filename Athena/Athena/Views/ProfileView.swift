@@ -8,18 +8,18 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-import SDWebImageSwiftUI
 import CollectionViewPagingLayout
- 
+import SDWebImageSwiftUI
+
 struct ProfileView: View {
     @State private var email = Auth.auth().currentUser!.email
     @State private var user = Auth.auth().currentUser
-    @State private var showLogoutAlert = false
-    @State private var loggedOut = false
     @State private var showAlreadyRead = true // If its false then it shows the wishlist
     @State private var wishlistedBooks = [Book]()
     @State private var alreadyReadBooks = [Book]()
     @State private var selectedBookID: Book.ID? = nil
+    @State private var showSettingsView = false
+  
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
  
@@ -29,98 +29,11 @@ struct ProfileView: View {
                 ZStack {
                     LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                         .edgesIgnoringSafeArea(.all)
-                    VStack(alignment: .leading, spacing: 1) {
+                    VStack(alignment: .leading, spacing: 8) {
                         Text(email!)
                             .font(.system(size: 25, design: .rounded))
                             .foregroundColor(.white)
-                            .padding(.vertical, 5)
-                        ScrollView{
-                            Button {
-                                // Edit Name
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Edit Name")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
-                            NavigationLink {
-                                // Edit Email
-                                Change_Email()
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Edit Email")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
-                            Button {
-                                // Change Password
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Change Password")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
-                            Button {
-                                // Show Insights
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Insights")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
-                            Button {
-                                // Push Notifications screen
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Push Notifications")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
-                            Button {
-                                // Clear Cache
-                                SDImageCache.shared.clear(with: .all)
-                            } label: {
-                                ZStack(alignment: .leading){
-                                    RoundedRectangle(cornerRadius: 0)
-                                        .frame(height: 35)
-                                        .foregroundColor(.white.opacity(0.2))
-                                    Text("Clear Cache")
-                                        .font(.system(size: 20, design: .rounded)).bold()
-                                        .foregroundColor(.white)
-                                        .frame(alignment: .leading)
-                                        .padding(10)
-                                }
-                            }
+                        ScrollView {
                             HStack(alignment: .top, spacing: 8) {
                                 Button {
                                     // Already Read
@@ -174,6 +87,7 @@ struct ProfileView: View {
                                 }
                             }
                             .padding(.vertical)
+                          
                             if !showAlreadyRead { // If the user is clicked on "wishlist"
                                 if wishlistedBooks.count == 0 {
                                     Spacer()
@@ -287,43 +201,11 @@ struct ProfileView: View {
                                     .padding()
                                 }
                             }
-                            HStack{
-                                Spacer()
-                                Button {
-                                    // Log out of proifle
-                                    showLogoutAlert = true
-                                } label: {
-                                    ZStack(alignment: .center){
-                                        RoundedRectangle(cornerRadius: 50)
-                                            .frame(width: 160, height: 40)
-                                            .foregroundColor(.white.opacity(0.3))
-                                        Text("Log Out")
-                                            .font(.system(size: 20, design: .rounded)).bold()
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                                .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
-                                    Button("Yes") {
-                                        loggedOut = true
-                                        do { try Auth.auth().signOut() }
-                                        catch { print("already logged out") }
-                                    }
-                                    Button("No") { }
-                                }
-
-                                Spacer()
-                            }
-                            .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
-                            .padding(.vertical)
                         }
-                        
                     }
                     .padding(.horizontal)
                 }
                 .navigationTitle("Profile")
-                .fullScreenCover(isPresented: $loggedOut) { // Shows OnboardingOne if the user logs out
-                    OnboardingOne()
-                }
                 .tint(.white)
                 .onAppear {
                     if let user = auth.currentUser {
@@ -353,6 +235,18 @@ struct ProfileView: View {
                                 }
                             }
                     }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .primaryAction, content: {
+                        Button {
+                            self.showSettingsView.toggle()
+                        } label: {
+                            Image(systemName: "gear")
+                        }
+                    })
+                }
+                .sheet(isPresented: $showSettingsView) {
+                    SettingsView()
                 }
             }
         }
