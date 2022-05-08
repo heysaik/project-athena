@@ -15,5 +15,5 @@ struct Note: Identifiable, Convertable, Equatable {
     var createdAt: Date
     var creatorID: String
     var editedAt: Date
-//    var book: Book? 
+    var book: Book? 
 }
