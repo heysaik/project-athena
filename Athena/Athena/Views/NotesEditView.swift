@@ -6,13 +6,33 @@
 //
 
 import SwiftUI
+import Firebase
+import Foundation
 
 struct NotesEditView: View {
+    @Environment(\.presentationMode) var presentationMode
     @State private var title = ""
     @State private var noteBody = ""
-
+    @State private var createdAt  = Date()
+    @State private var createrID = ""
+    @State private var editedAt = Date()
     var note: Note
-    
+    private let firestore =  Firestore.firestore()
+    @State private var oldNotes = [Note]()
+    // var title: ""  var note: ""  var createdAt: ""  var creatorID: ""  var editedAt: ""
+//    @State private var note: Note = Note(id: "",title: "" , note: "" , createdAt: Date(), creatorID: "" , editedAt: Date())
+    func addNote(note: Note){
+        do{
+            let _ = try firestore.collection("note").addDocument(from: note)
+            
+        }
+        catch{
+            print(error)
+        }
+    }
+    func save(){
+        addNote(note : note)
+    }
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
@@ -29,25 +49,43 @@ struct NotesEditView: View {
         .onAppear {
             self.title = note.title
             self.noteBody = note.note
+            self.createdAt = note.createdAt
+            self.createrID = note.creatorID
+            self.editedAt = note.editedAt
+            
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing, content: {
-                Button {
+                Button (
                     // Dismiss View
-                } label: {
+                    action: {handleDoneTapped()}
+                , label: {
                     Text("Cancel")
-                }
+                })
             })
             
             ToolbarItem(placement: .primaryAction, content: {
-                Button {
+                Button (
                     // TODO: Save Title, Body, Update Book, and Edited At and then dismiss
-                } label: {
+                    action: {handleDoneTapped()}
+                 
+                ,label: {
                     Text("Save")
-                }
+                })
             })
         }
         .navigationTitle("Edit Note")
+    }
+    func handleCancelTapped() {
+        dismiss()
+    }
+    
+    func handleDoneTapped(){
+        self.save()
+        dismiss()
+    }
+    func dismiss(){
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

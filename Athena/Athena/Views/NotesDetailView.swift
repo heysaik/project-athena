@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct NotesDetailView: View {
     var note: Note
     
