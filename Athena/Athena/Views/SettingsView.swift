@@ -38,7 +38,7 @@ struct SettingsView: View {
                         }
                         HStack {
                             NavigationLink {
-                                // Push Notifications
+                                NotificationsView()
                             } label: {
                                 Label("Push Notifications", systemImage: "bell.badge.fill")
                                     .font(.system(size: 17, design: .rounded))
