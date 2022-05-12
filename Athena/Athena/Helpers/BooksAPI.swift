@@ -30,6 +30,7 @@ final class GoogleBooksManager {
             for book in books {
                 var b = Book(
                     id: book["id"].stringValue,
+                    docID: UUID().uuidString,
                     title: book["volumeInfo"]["title"].stringValue,
                     authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
                     publisher: book["volumeInfo"]["publisher"].stringValue,
@@ -69,6 +70,7 @@ final class GoogleBooksManager {
             for book in books {
                 var b = Book(
                     id: book["id"].stringValue,
+                    docID: UUID().uuidString,
                     title: book["volumeInfo"]["title"].stringValue,
                     authors: book["volumeInfo"]["authors"].arrayObject as? [String] ?? ["Anonymous Author"],
                     publisher: book["volumeInfo"]["publisher"].stringValue,

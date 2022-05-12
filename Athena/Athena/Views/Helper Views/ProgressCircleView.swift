@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProgressCircleView: View {
-    @Binding var current: Int
+    @Binding var current: Int?
     var total: Int
         
     var body: some View {
@@ -32,7 +32,7 @@ struct ProgressCircleView: View {
                     center: CGPoint(x: 95, y: 95),
                     radius: 95,
                     startAngle: Angle(degrees: -90),
-                    endAngle: Angle(degrees: -90) + Angle(degrees: 360 * Double(current) / Double(total)),
+                    endAngle: Angle(degrees: -90) + Angle(degrees: 360 * Double(current ?? 0) / Double(total)),
                     clockwise: false
                 )
             }
@@ -44,7 +44,7 @@ struct ProgressCircleView: View {
                 )
             )
             
-            Text("\(Double(current)/Double(total) * 100, specifier: "%.0f")%")
+            Text("\(Double(current ?? 0)/Double(total) * 100, specifier: "%.0f")%")
                 .font(.system(size: 45, weight: .bold, design: .rounded))
         }
         .frame(width: 190, height: 190, alignment: .center)
