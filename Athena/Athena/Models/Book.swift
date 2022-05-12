@@ -10,6 +10,7 @@ import Foundation
 // This structure is used to save 
 struct Book: Identifiable, Convertable, Equatable {
     var id: String
+    var docID: String
     var title: String
     var authors: [String]
     var publisher: String

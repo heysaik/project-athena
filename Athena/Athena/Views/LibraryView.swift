@@ -100,23 +100,29 @@ struct LibraryView: View {
             .onAppear {
                 if let user = auth.currentUser {
                     firestore
-                        .collection("users")
-                        .document(user.uid)
-                        .addSnapshotListener { docSnapshot, error in
+                        .collection("currentlyReading")
+                        .whereField("readerID", isEqualTo: user.uid)
+                        .addSnapshotListener { querySnapshot, error in
                             guard error == nil else {
                                 print(error!.localizedDescription)
                                 return
                             }
                             
-                            if let snapshot = docSnapshot {
-                                do {
-                                    let userData = try snapshot.data(as: User.self)
-                                    self.currentlyReadingBooks = userData.currentlyReading.sorted(by: {$0.title < $1.title})
-                                    if self.currentlyReadingBooks.count > 0 {
-                                        self.selectedBookID = currentlyReadingBooks.first!.id
+                            if let snapshot = querySnapshot {
+                                let docs = snapshot.documents
+                                self.currentlyReadingBooks = []
+                                for doc in docs {
+                                    do {
+                                        let book = try doc.data(as: Book.self)
+                                        self.currentlyReadingBooks.append(book)
+                                    } catch let convertError {
+                                        print("Conversion Error: \(convertError.localizedDescription)")
                                     }
-                                } catch let convertError {
-                                    print("Conversion Error: \(convertError.localizedDescription)")
+                                }
+                                
+                                self.currentlyReadingBooks.sort(by: {$0.title < $1.title})
+                                if self.currentlyReadingBooks.count > 0 {
+                                    self.selectedBookID = currentlyReadingBooks.first!.id
                                 }
                             }
                         }

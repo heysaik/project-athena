@@ -208,31 +208,85 @@ struct ProfileView: View {
                 .tint(.white)
                 .onAppear {
                     if let user = auth.currentUser {
+                        
+                        // Load Wishlist
                         firestore
-                            .collection("users")
-                            .document(user.uid)
-                            .addSnapshotListener { docSnapshot, error in
+                            .collection("wishlist")
+                            .whereField("readerID", isEqualTo: user.uid)
+                            .addSnapshotListener { querySnapshot, error in
                                 guard error == nil else {
                                     print(error!.localizedDescription)
                                     return
                                 }
                                 
-                                if let snapshot = docSnapshot {
-                                    do {
-                                        let userData = try snapshot.data(as: User.self)
-                                        self.wishlistedBooks = userData.wishlist.sorted(by: {$0.title < $1.title})
-                                        if self.wishlistedBooks.count > 0 {
-                                            self.selectedBookID = wishlistedBooks.first!.id
+                                if let snapshot = querySnapshot {
+                                    let docs = snapshot.documents
+                                    self.wishlistedBooks = []
+                                    for doc in docs {
+                                        do {
+                                            let book = try doc.data(as: Book.self)
+                                            self.wishlistedBooks.append(book)
+                                        } catch let convertError {
+                                            print("Conversion Error: \(convertError.localizedDescription)")
                                         }
-                                        self.alreadyReadBooks = userData.alreadyRead.sorted(by: {$0.title < $1.title})
-                                        if self.alreadyReadBooks.count > 0 {
-                                            self.selectedBookID = alreadyReadBooks.first!.id
-                                        }
-                                    } catch let convertError {
-                                        print("Conversion Error: \(convertError.localizedDescription)")
                                     }
+                                    
+                                    self.wishlistedBooks.sort(by: {$0.title < $1.title})
                                 }
                             }
+                        
+                        // Load Already Read
+                        firestore
+                            .collection("alreadyRead")
+                            .whereField("readerID", isEqualTo: user.uid)
+                            .addSnapshotListener { querySnapshot, error in
+                                guard error == nil else {
+                                    print(error!.localizedDescription)
+                                    return
+                                }
+                                
+                                if let snapshot = querySnapshot {
+                                    let docs = snapshot.documents
+                                    self.alreadyReadBooks = []
+                                    for doc in docs {
+                                        do {
+                                            let book = try doc.data(as: Book.self)
+                                            self.alreadyReadBooks.append(book)
+                                        } catch let convertError {
+                                            print("Conversion Error: \(convertError.localizedDescription)")
+                                        }
+                                    }
+                                    
+                                    self.alreadyReadBooks.sort(by: {$0.title < $1.title})
+                                }
+                            }
+                        
+                        
+//                        firestore
+//                            .collection("users")
+//                            .document(user.uid)
+//                            .addSnapshotListener { docSnapshot, error in
+//                                guard error == nil else {
+//                                    print(error!.localizedDescription)
+//                                    return
+//                                }
+//                                
+//                                if let snapshot = docSnapshot {
+//                                    do {
+//                                        let userData = try snapshot.data(as: User.self)
+//                                        self.wishlistedBooks = userData.wishlist.sorted(by: {$0.title < $1.title})
+//                                        if self.wishlistedBooks.count > 0 {
+//                                            self.selectedBookID = wishlistedBooks.first!.id
+//                                        }
+//                                        self.alreadyReadBooks = userData.alreadyRead.sorted(by: {$0.title < $1.title})
+//                                        if self.alreadyReadBooks.count > 0 {
+//                                            self.selectedBookID = alreadyReadBooks.first!.id
+//                                        }
+//                                    } catch let convertError {
+//                                        print("Conversion Error: \(convertError.localizedDescription)")
+//                                    }
+//                                }
+//                            }
                     }
                 }
                 .toolbar {
