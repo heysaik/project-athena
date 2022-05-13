@@ -22,6 +22,7 @@
 		8B551FA92827464500886FAB /* NotesDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B551FA82827464500886FAB /* NotesDetailView.swift */; };
 		8B551FAB282746A200886FAB /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B551FAA282746A200886FAB /* Note.swift */; };
 		8B551FAD28274BB000886FAB /* NotesEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B551FAC28274BB000886FAB /* NotesEditView.swift */; };
+		8B551FAF282754CD00886FAB /* NotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B551FAE282754CD00886FAB /* NotificationsView.swift */; };
 		8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */; };
 		8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */; };
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
@@ -64,6 +65,7 @@
 		8B551FA82827464500886FAB /* NotesDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesDetailView.swift; sourceTree = "<group>"; };
 		8B551FAA282746A200886FAB /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
 		8B551FAC28274BB000886FAB /* NotesEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesEditView.swift; sourceTree = "<group>"; };
+		8B551FAE282754CD00886FAB /* NotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsView.swift; sourceTree = "<group>"; };
 		8B5A6F9D27FDD799003F56C7 /* Athena.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Athena.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B5A6FA027FDD799003F56C7 /* AthenaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AthenaApp.swift; sourceTree = "<group>"; };
 		8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOne.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				8B551FAC28274BB000886FAB /* NotesEditView.swift */,
 				8B7C61FF2807F24300A0E97F /* ProfileView.swift */,
 				8B551FA628273B7200886FAB /* SettingsView.swift */,
+				8B551FAE282754CD00886FAB /* NotificationsView.swift */,
 				07A69763281C87AF005A3B35 /* Change Email.swift */,
 				8B7C61F62807F1EA00A0E97F /* Onboarding */,
 				8BCF15412814DE26000A375B /* Helper Views */,
@@ -327,6 +330,7 @@
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
 				8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */,
 				8B541057280E1C5100FD1A90 /* Book.swift in Sources */,
+				8B551FAF282754CD00886FAB /* NotificationsView.swift in Sources */,
 				8B7C61FE2807F23700A0E97F /* NotesView.swift in Sources */,
 				8B551FA728273B7200886FAB /* SettingsView.swift in Sources */,
 			);
