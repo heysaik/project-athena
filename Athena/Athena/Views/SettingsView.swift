@@ -8,11 +8,13 @@
 import SwiftUI
 import SDWebImage
 import FirebaseAuth
+import FirebaseFirestore
 
 struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @State private var showLogoutAlert = false
+    @State private var showDeleteAlert = false
     @State private var showEmailAlert = false
     @State private var loggedOut = false
     
@@ -102,7 +104,7 @@ struct SettingsView: View {
                         
                         HStack {
                             Button {
-                                // Clear Cache
+                                // Logout
                                 self.showLogoutAlert.toggle()
                             } label: {
                                 Label("Log Out", systemImage: "arrowtriangle.backward.square.fill")
@@ -111,21 +113,120 @@ struct SettingsView: View {
                             }
                         }
                         .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
-                            Button("Yes") {
-                                loggedOut = true
-                                do { try Auth.auth().signOut() }
-                                catch { print("already logged out") }
+                            Button(role: .cancel) {
+                                
+                            } label: {
+                                Text("Cancel")
                             }
-                            Button("No") { }
+
+                            Button(role: .cancel) {
+                                do {
+                                    try Auth.auth().signOut()
+                                    loggedOut = true
+                                } catch {
+                                    print("already logged out")
+                                }
+                            } label: {
+                                Text("Log Out")
+                            }
                         }
                         
                         HStack {
                             Button {
                                 // Delete Account
+                                showDeleteAlert.toggle()
                             } label: {
                                 Label("Delete Account", systemImage: "trash.circle.fill")
                                     .font(.system(size: 17, design: .rounded))
                                 
+                            }
+                        }
+                        .alert("Are you sure you want to log out?", isPresented: $showDeleteAlert) {
+                            
+                            Button(role: .cancel) {
+                                showDeleteAlert.toggle()
+                            } label: {
+                                Text("Cancel")
+                            }
+
+                            Button(role: .destructive) {
+                                Task {
+                                    if let userID = Auth.auth().currentUser?.uid {
+                                        // Delete Firestore Public Data
+                                        try await Firestore.firestore()
+                                            .collection("users")
+                                            .document(userID)
+                                            .delete()
+                                        
+                                        // Delete Firestore Private Data
+                                        try await Firestore.firestore()
+                                            .collection("private")
+                                            .document(userID)
+                                            .delete()
+                                        
+                                        // Delete Notes
+                                        let notesDocs = try await Firestore.firestore()
+                                            .collection("notes")
+                                            .whereField("creatorID", isEqualTo: userID)
+                                            .getDocuments()
+                                        for document in notesDocs.documents {
+                                            try await Firestore.firestore()
+                                                .collection("notes")
+                                                .document(document.documentID)
+                                                .delete()
+                                        }
+                                        
+                                        // Delete Already Read
+                                        let arDocs = try await Firestore.firestore()
+                                            .collection("alreadyRead")
+                                            .whereField("readerID", isEqualTo: userID)
+                                            .getDocuments()
+                                        for document in arDocs.documents {
+                                            try await Firestore.firestore()
+                                                .collection("alreadyRead")
+                                                .document(document.documentID)
+                                                .delete()
+                                        }
+                                        
+                                        // Wishlist Notes
+                                        let wishDocs = try await Firestore.firestore()
+                                            .collection("wishlist")
+                                            .whereField("readerID", isEqualTo: userID)
+                                            .getDocuments()
+                                        for document in wishDocs.documents {
+                                            try await Firestore.firestore()
+                                                .collection("notes")
+                                                .document(document.documentID)
+                                                .delete()
+                                        }
+                                        
+                                        // Currently Reading Notes
+                                        let crDocs = try await Firestore.firestore()
+                                            .collection("currentlyReading")
+                                            .whereField("creatorID", isEqualTo: userID)
+                                            .getDocuments()
+                                        for document in crDocs.documents {
+                                            try await Firestore.firestore()
+                                                .collection("currentlyReading")
+                                                .document(document.documentID)
+                                                .delete()
+                                        }
+                                        
+                                        // Delete Auth
+                                        do {
+                                            try Auth.auth().signOut()
+                                            try await Auth.auth().currentUser?.delete()
+                                            loggedOut = true
+                                        } catch {
+                                            print("already logged out")
+                                        }
+                                    } else {
+                                        print("logged out")
+                                        loggedOut = true
+                                    }
+                                }
+                            } label: {
+                                Text("Delete")
                             }
                         }
                     }
