@@ -23,7 +23,7 @@ struct Change_Email: View {
         LinearGradient(colors: [Color(.displayP3, red: 0, green: 110/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
             .edgesIgnoringSafeArea(.all)
         VStack(alignment: .leading, spacing: 8) {
-            TextField("New Email Adress", text: $newemail, prompt: Text("happy@starkindustries.com"))
+            TextField("New Email Adress", text: $newemail, prompt: Text("New Email Adress"))
                 .padding(.horizontal)
                 .keyboardType(.emailAddress)
                 .textCase(.lowercase)
@@ -35,7 +35,7 @@ struct Change_Email: View {
                 )
                 .frame(height: 44)
             
-            SecureField("Confirm Password", text: $password, prompt: Text("password"))
+            SecureField("Confirm Password", text: $password, prompt: Text("Current Password"))
                 .padding(.horizontal)
                 .textCase(.lowercase)
                 .foregroundColor(.white)
@@ -58,20 +58,29 @@ struct Change_Email: View {
                 
                 Task {
                         // Change Email
-                        
-                        do {
-                            try await user?.updateEmail(to: newemail)
-                        } catch let error {
-                            alertTitle = "Could not change email"
-                            alertMessage = error.localizedDescription
-                            showErrorAlert = true
-                            showLoadingView = false
-                            return
-                        }
-                        withAnimation(.easeInOut(duration: 0.25)) {
-                            showLoadingView = false
-                        }
-                        emailAlert = true
+                    let credential = EmailAuthProvider.credential(withEmail: Auth.auth().currentUser!.email!, password: password)
+                    do {
+                        try await user?.reauthenticate(with: credential)
+                    } catch let error {
+                        alertTitle = "Could not change email"
+                        alertMessage = error.localizedDescription
+                        showErrorAlert = true
+                        showLoadingView = false
+                        return
+                    }
+                    do {
+                        try await user?.updateEmail(to: newemail)
+                    } catch let error {
+                        alertTitle = "Could not change email"
+                        alertMessage = error.localizedDescription
+                        showErrorAlert = true
+                        showLoadingView = false
+                        return
+                    }
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        showLoadingView = false
+                    }
+                    emailAlert = true
                 }
             }
             ) {
@@ -90,6 +99,16 @@ struct Change_Email: View {
                 }
             }
             .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+        }
+        .alert(alertTitle, isPresented: $showErrorAlert) {
+            Button {
+                // Dismiss
+            } label: {
+                Text("OK")
+            }
+
+        } message: {
+            Text(alertMessage)
         }
     }
 }

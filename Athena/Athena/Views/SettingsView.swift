@@ -13,6 +13,7 @@ struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @State private var showLogoutAlert = false
+    @State private var showEmailAlert = false
     @State private var loggedOut = false
     
     // Used to show the gradient
@@ -37,7 +38,7 @@ struct SettingsView: View {
                         }
                         HStack {
                             NavigationLink {
-                                // Push Notifications
+                                NotificationsView()
                             } label: {
                                 Label("Push Notifications", systemImage: "bell.badge.fill")
                                     .font(.system(size: 17, design: .rounded))
@@ -68,9 +69,21 @@ struct SettingsView: View {
                         HStack {
                             Button {
                                 // Change Password
+                                do{
+                                    Auth.auth().sendPasswordReset(withEmail: Auth.auth().currentUser!.email!) { error in
+                                        if error == nil{
+                                            showEmailAlert = true
+                                        }
+                                    }
+                                }
                             } label: {
                                 Label("Edit Password", systemImage: "ellipsis.rectangle.fill")
                                     .font(.system(size: 17, design: .rounded))
+                            }
+                        }
+                        .alert("An email to change your password has been sent to \(Auth.auth().currentUser!.email!)", isPresented: $showEmailAlert){
+                            Button("OK") {
+                                showEmailAlert = false
                             }
                         }
                     }
@@ -84,7 +97,6 @@ struct SettingsView: View {
                             } label: {
                                 Label("Clear Cache", systemImage: "trash.slash.circle")
                                     .font(.system(size: 17, design: .rounded))
-                                
                             }
                         }
                         
