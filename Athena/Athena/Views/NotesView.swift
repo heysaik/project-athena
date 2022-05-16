@@ -15,8 +15,10 @@ import Foundation
 struct NotesView: View {
     @State private var noteResults = [Note]()
     @State private var searchTerm = ""
+    @State private var newNote = Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())
     
-    private let firestore =  Firestore.firestore()
+    private let firestore = Firestore.firestore()
+    
     var body: some View {
         NavigationView {
             ZStack {
@@ -59,7 +61,7 @@ struct NotesView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction, content: {
                     NavigationLink {
-                        NotesEditView(note: Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date()))
+                        NotesEditView(note: $newNote, creatingNewNote: true)
                     } label: {
                         Image(systemName: "plus")
                     }
@@ -97,18 +99,6 @@ struct NotesView: View {
             }
         }
     }
-//    func addNote(note: Note){
-//        do{
-//            let _ = try firestore.collection("note").addDocument(from: note)
-//            
-//        }
-//        catch{
-//            print(error)
-//        }
-//    }
-//    func save(){
-//      addNote(note : note)
-//    }
 }
 
 struct NotesView_Previews: PreviewProvider {

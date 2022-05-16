@@ -11,95 +11,92 @@ import Foundation
 
 struct NotesEditView: View {
     @Environment(\.presentationMode) var presentationMode
-    @State private var title = ""
-    @State private var noteBody = ""
-    @State private var createdAt  = Date()
-    @State private var createrID = ""
-    @State private var editedAt = Date()
-     
-    var note: Note
-    private let firestore =  Firestore.firestore()
-    @State private var oldNotes = [Note]()
-    // var title: ""  var note: ""  var createdAt: ""  var creatorID: ""  var editedAt: ""
-//    @State private var note: Note = Note(id: "",title: "" , note: "" , createdAt: Date(), creatorID: "" , editedAt: Date())
-    func addNote(note: Note){
-        do{
-//            let _ = try firestore.collection("note").addDocument(from: note)
-            let _ = try Firestore.firestore()
-                .collection("notes")
-                .addDocument(from:note)    // note.id for updatinga note in ()
-           
-                 .setData([ "title": self.title, "note": self.noteBody, "createdAt": self.createdAt, "createrID": self.createrID, "editedAt": self.editedAt])
-    //        }
-
-        }
-        catch{
-            print(error)
-        }
-    }
-    func save(){
-      addNote(note : note)
-    }
+    @Binding var note: Note
+    
+    var creatingNewNote = false
+    private let firestore = Firestore.firestore()
+    
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading) {
-                TextField("Title", text: $title)
+                TextField("Title", text: $note.title)
                     .font(.system(.title, design: .rounded).bold())
-                CustomTextEditor(placeholder: "Start typing..", text: $noteBody)
+                CustomTextEditor(placeholder: "Start typing..", text: $note.note)
                     .font(.body)
                 Spacer()
             }
             .padding()
         }
-        .onAppear {
-            self.title = note.title
-            self.noteBody = note.note
-            self.createdAt = note.createdAt
-            self.createrID = note.creatorID
-            self.editedAt = note.editedAt
-            
-        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing, content: {
-                Button (
-                    // Dismiss View
-                    action: {handleDoneTapped()}
-                , label: {
+                Button {
+                    dismiss()
+                } label: {
                     Text("Cancel")
-                })
+                }
             })
             
             ToolbarItem(placement: .primaryAction, content: {
-                Button (
-                    // TODO: Save Title, Body, Update Book, and Edited At and then dismiss
-                    action: {handleDoneTapped()}
-                    
-                ,label: {
+                Button {
+                    Task {
+                        if creatingNewNote {
+                            print("creating note")
+                            try await createNote(note: note)
+                            dismiss()
+                        } else {
+                            try await updateNote(note: note)
+                            dismiss()
+                        }
+                    }
+                } label: {
                     Text("Save")
-                })
+                        .bold()
+                }
             })
         }
         .navigationTitle("Edit Note")
     }
-    func handleCancelTapped() {
-        dismiss()
+    
+    func createNote(note: Note) async throws {
+        do {
+            try await firestore
+                .collection("notes")
+                .document()
+                .setData([
+                    "title": note.title,
+                    "note": note.note,
+                    "createdAt": note.createdAt,
+                    "creatorID": note.creatorID,
+                    "editedAt": note.editedAt
+                ])
+        } catch let addError {
+            print(addError.localizedDescription)
+        }
     }
     
-    func handleDoneTapped(){
-
-//        let noteref = Firestore.firestore()
-//            .collection("notes")
-//            .document()    // note.id for updatinga note in ()
-//
-//        noteref.setData([ "title": self.title, "note": self.noteBody, "createdAt": self.createdAt, "createrID": self.createrID, "editedAt": self.editedAt])
-////        }
-        self.save()
-        dismiss()
+    func updateNote(note: Note) async throws {
+        do {
+            if let noteId = note.id {
+                try await firestore
+                    .collection("notes")
+                    .document(noteId)
+                    .updateData([
+                        "title": note.title,
+                        "note": note.note,
+                        "createdAt": note.createdAt,
+                        "creatorID": note.creatorID,
+                        "editedAt": note.editedAt
+                    ])
+            }
+        } catch let addError {
+            print(addError.localizedDescription)
+        }
     }
+    
     func dismiss(){
-        presentationMode.wrappedValue.dismiss()
+        self.presentationMode.wrappedValue.dismiss()
     }
 }
 
@@ -107,21 +104,21 @@ struct NotesEditView: View {
 struct CustomTextEditor: View {
     let placeholder: String
     @Binding var text: String
-    let internalPadding: CGFloat = 5
+    
+    init(placeholder: String, text: Binding<String>) {
+        UITextView.appearance().backgroundColor = .clear
+        self.placeholder = placeholder
+        self._text = text
+    }
+    
     var body: some View {
         ZStack(alignment: .topLeading) {
-            if text.isEmpty  {
+            if text.isEmpty {
                 Text(placeholder)
                     .foregroundColor(Color.primary.opacity(0.25))
-                    .padding(EdgeInsets(top: 7, leading: 4, bottom: 0, trailing: 0))
-                    .padding(internalPadding)
             }
+            
             TextEditor(text: $text)
-                .padding(internalPadding)
-        }.onAppear() {
-            UITextView.appearance().backgroundColor = .clear
-        }.onDisappear() {
-            UITextView.appearance().backgroundColor = nil
         }
     }
 }
