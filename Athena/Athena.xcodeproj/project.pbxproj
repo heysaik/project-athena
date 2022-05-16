@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		071516C92805FC740025F373 /* OnboardingThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071516C82805FC740025F373 /* OnboardingThree.swift */; };
-		07A69764281C87AF005A3B35 /* Change Email.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A69763281C87AF005A3B35 /* Change Email.swift */; };
 		8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0005432807EF0600ED855C /* OnboardingTwo.swift */; };
 		8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1D86C0280CA2270051F712 /* LoadingView.swift */; };
 		8B32FE7C27FE306B00B93C0D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B32FE7B27FE306B00B93C0D /* AudioToolbox.framework */; };
@@ -51,7 +50,6 @@
 
 /* Begin PBXFileReference section */
 		071516C82805FC740025F373 /* OnboardingThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingThree.swift; sourceTree = "<group>"; };
-		07A69763281C87AF005A3B35 /* Change Email.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Change Email.swift"; sourceTree = "<group>"; };
 		8B0005432807EF0600ED855C /* OnboardingTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingTwo.swift; sourceTree = "<group>"; };
 		8B1D86C0280CA2270051F712 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8B32FE7927FE306A00B93C0D /* Athena.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Athena.entitlements; sourceTree = "<group>"; };
@@ -139,7 +137,6 @@
 				8B7C61FF2807F24300A0E97F /* ProfileView.swift */,
 				8B551FA628273B7200886FAB /* SettingsView.swift */,
 				8B551FAE282754CD00886FAB /* NotificationsView.swift */,
-				07A69763281C87AF005A3B35 /* Change Email.swift */,
 				8B7C61F62807F1EA00A0E97F /* Onboarding */,
 				8BCF15412814DE26000A375B /* Helper Views */,
 			);
@@ -315,7 +312,6 @@
 				8BBB1DA62810644400644434 /* SearchTerm.swift in Sources */,
 				8B7C62002807F24300A0E97F /* ProfileView.swift in Sources */,
 				8B94E9FE28029E56009A0D36 /* OnboardingFour.swift in Sources */,
-				07A69764281C87AF005A3B35 /* Change Email.swift in Sources */,
 				8B7C61F82807F20100A0E97F /* RootView.swift in Sources */,
 				8B551FA92827464500886FAB /* NotesDetailView.swift in Sources */,
 				8B1D86C1280CA2270051F712 /* LoadingView.swift in Sources */,
