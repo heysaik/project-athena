@@ -9,10 +9,15 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import Firebase
+import Foundation
 
 struct NotesView: View {
     @State private var noteResults = [Note]()
     @State private var searchTerm = ""
+    @State private var newNote = Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())
+    
+    private let firestore = Firestore.firestore()
     
     var body: some View {
         NavigationView {
@@ -56,7 +61,7 @@ struct NotesView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction, content: {
                     NavigationLink {
-                        NotesEditView(note: Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date()))
+                        NotesEditView(note: $newNote, creatingNewNote: true)
                     } label: {
                         Image(systemName: "plus")
                     }
