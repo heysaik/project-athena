@@ -77,6 +77,5 @@ struct NotesDetailView: View {
         } message: {
             Text("Your note will be deleted from Athena. This action is irreversible.")
         }
-
     }
 }
