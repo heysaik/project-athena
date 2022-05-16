@@ -18,6 +18,7 @@ struct ProfileView: View {
     @State private var alreadyReadBooks = [Book]()
     @State private var selectedBookID: Book.ID? = nil
     @State private var showSettingsView = false
+    private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)] // for already read and wishlist
   
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
@@ -100,7 +101,7 @@ struct ProfileView: View {
                                     .padding(.horizontal)
                                     Spacer()
                                 } else {
-                                    VStack(alignment: .center, spacing: 24) {
+                                    LazyVGrid(columns: twoColumnGrid) {
                                         ForEach (wishlistedBooks) { book in
                                             Button {
                                                 // Open Album
@@ -112,21 +113,20 @@ struct ProfileView: View {
                                                         WebImage(url: URL(string: book.imageLink))
                                                             .resizable()
                                                             .aspectRatio(0.66, contentMode: .fit)
-                                                            .frame(width: geometry.size.width * 0.6)
+                                                            .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
                                                             .cornerRadius(5, corners: [.topLeft, .bottomLeft])
                                                             .cornerRadius(13, corners: [.bottomRight, .topRight])
                                                         Text(book.title)
                                                             .foregroundColor(.white)
                                                             .font(.system(size: 20, weight: .semibold, design: .default))
-                                                        // Tried to implement a loop below to go through all of the authors but it kept timing out or giving errors. So im just showing the first author for now
-                                                        Text(book.authors[0])
-                                                            .font(.system(size: 16, weight: .light, design: .default))
-                                                            .foregroundColor(.white)
-//                                                        for author in (book.authors){
-//                                                            Text(author)
-//                                                                .font(.system(size: 16, weight: .light, design: .default))
-//                                                                .foregroundColor(.white)
-//                                                        }
+                                                            .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
+                                                        // Tried to use "format" to format authors, but it would not work
+                                                        ForEach (book.authors, id: \.self) { author in
+//                                                            Text(author, format: .list(type: .and))
+                                                            Text(author)
+                                                                .font(.system(size: 16, weight: .light, design: .default))
+                                                                .foregroundColor(.white)
+                                                        }
 //                                                      TODO: We can add this when we get to ratings
 //                                                      ForEach(0..<5) { i in
 //                                                          Image(systemName: "star.fill")
@@ -137,11 +137,10 @@ struct ProfileView: View {
  
                                                 }
                                                 .aspectRatio(0.66, contentMode: .fit)
-                                                .frame(width: geometry.size.width * 0.7)
+                                                .frame(width: geometry.size.width * 0.4)
                                             }
                                         }
                                     }
-                                    .padding()
                                 }
                             } else { // // If the user is clicked on "already read"
                                 if alreadyReadBooks.count == 0 {
@@ -156,7 +155,7 @@ struct ProfileView: View {
                                     .padding(.horizontal)
                                     Spacer()
                                 } else {
-                                    VStack(alignment: .center, spacing: 24) {
+                                    LazyVGrid(columns: twoColumnGrid) {
                                         ForEach (alreadyReadBooks) { book in
                                             Button {
                                                 // Open Album
@@ -168,36 +167,34 @@ struct ProfileView: View {
                                                         WebImage(url: URL(string: book.imageLink))
                                                             .resizable()
                                                             .aspectRatio(0.66, contentMode: .fit)
-                                                            .frame(width: geometry.size.width * 0.6)
+                                                            .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
                                                             .cornerRadius(5, corners: [.topLeft, .bottomLeft])
                                                             .cornerRadius(13, corners: [.bottomRight, .topRight])
                                                         Text(book.title)
                                                             .foregroundColor(.white)
                                                             .font(.system(size: 20, weight: .semibold, design: .default))
-                                                        // Tried to implement a loop below to go through all of the authors but it kept timing out or giving errors. So im just showing the first author for now
-                                                        Text(book.authors[0])
-                                                            .font(.system(size: 16, weight: .light, design: .default))
-                                                            .foregroundColor(.white)
-//                                                        for author in (book.authors){
-//                                                            Text(author)
-//                                                                .font(.system(size: 16, weight: .light, design: .default))
-//                                                                .foregroundColor(.white)
-//                                                        }
-//                                                      TODO: We can add this when we get to ratings
-//                                                      ForEach(0..<5) { i in
-//                                                          Image(systemName: "star.fill")
-//                                                              .font(.system(size: 16))
-//                                                              .foregroundColor(.yellow)
-//                                                      }
+                                                            .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
+                                                        // Tried to use "format" to format authors, but it would not work
+                                                        ForEach (book.authors, id: \.self) { author in
+//                                                            Text(author, format: .list(type: .and))
+                                                            Text(author)
+                                                                .font(.system(size: 16, weight: .light, design: .default))
+                                                                .foregroundColor(.white)
+                                                        }
+    //                                                      TODO: We can add this when we get to ratings
+    //                                                      ForEach(0..<5) { i in
+    //                                                          Image(systemName: "star.fill")
+    //                                                              .font(.system(size: 16))
+    //                                                              .foregroundColor(.yellow)
+    //                                                      }
                                                     }
- 
+
                                                 }
                                                 .aspectRatio(0.66, contentMode: .fit)
-                                                .frame(width: geometry.size.width * 0.7)
+                                                .frame(width: geometry.size.width * 0.4)
                                             }
                                         }
                                     }
-                                    .padding()
                                 }
                             }
                         }
