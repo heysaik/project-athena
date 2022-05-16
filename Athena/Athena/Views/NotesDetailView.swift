@@ -11,7 +11,7 @@ import SwiftUI
 
 struct NotesDetailView: View {
     var note: Note
-    
+   
     var body: some View {
         ZStack {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
@@ -38,5 +38,6 @@ struct NotesDetailView: View {
                 }
             })
         }
+  
     }
 }

@@ -16,6 +16,7 @@ struct NotesEditView: View {
     @State private var createdAt  = Date()
     @State private var createrID = ""
     @State private var editedAt = Date()
+     
     var note: Note
     private let firestore =  Firestore.firestore()
     @State private var oldNotes = [Note]()
@@ -23,15 +24,21 @@ struct NotesEditView: View {
 //    @State private var note: Note = Note(id: "",title: "" , note: "" , createdAt: Date(), creatorID: "" , editedAt: Date())
     func addNote(note: Note){
         do{
-            let _ = try firestore.collection("note").addDocument(from: note)
-            
+//            let _ = try firestore.collection("note").addDocument(from: note)
+            let _ = try Firestore.firestore()
+                .collection("notes")
+                .addDocument(from:note)    // note.id for updatinga note in ()
+           
+                 .setData([ "title": self.title, "note": self.noteBody, "createdAt": self.createdAt, "createrID": self.createrID, "editedAt": self.editedAt])
+    //        }
+
         }
         catch{
             print(error)
         }
     }
     func save(){
-        addNote(note : note)
+      addNote(note : note)
     }
     var body: some View {
         ZStack {
@@ -68,7 +75,7 @@ struct NotesEditView: View {
                 Button (
                     // TODO: Save Title, Body, Update Book, and Edited At and then dismiss
                     action: {handleDoneTapped()}
-                 
+                    
                 ,label: {
                     Text("Save")
                 })
@@ -81,6 +88,13 @@ struct NotesEditView: View {
     }
     
     func handleDoneTapped(){
+
+//        let noteref = Firestore.firestore()
+//            .collection("notes")
+//            .document()    // note.id for updatinga note in ()
+//
+//        noteref.setData([ "title": self.title, "note": self.noteBody, "createdAt": self.createdAt, "createrID": self.createrID, "editedAt": self.editedAt])
+////        }
         self.save()
         dismiss()
     }

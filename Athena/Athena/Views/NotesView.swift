@@ -9,11 +9,14 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import Firebase
+import Foundation
 
 struct NotesView: View {
     @State private var noteResults = [Note]()
     @State private var searchTerm = ""
-
+    
+    private let firestore =  Firestore.firestore()
     var body: some View {
         NavigationView {
             ZStack {
@@ -94,6 +97,18 @@ struct NotesView: View {
             }
         }
     }
+//    func addNote(note: Note){
+//        do{
+//            let _ = try firestore.collection("note").addDocument(from: note)
+//            
+//        }
+//        catch{
+//            print(error)
+//        }
+//    }
+//    func save(){
+//      addNote(note : note)
+//    }
 }
 
 struct NotesView_Previews: PreviewProvider {
