@@ -96,7 +96,7 @@ struct SettingsView: View {
                                     .font(.system(size: 17, design: .rounded))
                             }
                         }
-                        .alert("An email to change your password has been sent to \(auth.currentUser!.email!)", isPresented: $showEmailAlert){
+                        .alert("An email to change your password has been sent to your current email", isPresented: $showEmailAlert){
                             Button("OK") {
                                 showEmailAlert = false
                             }
