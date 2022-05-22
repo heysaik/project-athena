@@ -116,7 +116,7 @@ struct DetailView: View {
                             }
                         }
                         
-                        // TODO: Progress Circle
+                        // Progress Circle
                         HStack {
                             Spacer()
                             ProgressCircleView(current: $book.pagesRead, total: book.pageCount)
