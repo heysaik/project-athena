@@ -18,6 +18,7 @@ struct SettingsView: View {
     @State private var showDeleteAlert = false
     @State private var showPasswordAlert = false
     @State private var passwordChangedAlert = false
+    @State private var clearCacheAlert = false
     @State private var loggedOut = false
 
     @State private var newName = ""
@@ -122,10 +123,14 @@ struct SettingsView: View {
                         HStack {
                             Button {
                                 // Clear Cache
+                                clearCacheAlert.toggle()
                                 SDImageCache.shared.clear(with: .all)
                             } label: {
                                 Label("Clear Cache", systemImage: "trash.slash.circle")
                                     .font(.system(size: 17, design: .rounded))
+                            }
+                            .alert(isPresented: $clearCacheAlert) {
+                                        Alert(title: Text("Your cache was cleared."))
                             }
                         }
                         
