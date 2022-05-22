@@ -45,9 +45,9 @@ struct ProgressCircleView: View {
             
             VStack(alignment: .center, spacing: 4) {
                 Text("\(Double(current ?? 0)/Double(total) * 100, specifier: "%.0f")%")
-                    .font(.system(size: 45, weight: .bold, design: .rounded))
+                    .font(.custom("FoundersGrotesk-Bold", size: 45))
                 Text("\(current ?? 0)/\(total) pages read")
-                    .font(.subheadline.bold())
+                    .caption()
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)

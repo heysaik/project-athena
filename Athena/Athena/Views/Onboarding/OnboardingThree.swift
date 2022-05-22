@@ -23,10 +23,10 @@ struct OnboardingThree: View {
                     .padding(.horizontal)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Jot down your amazing thoughts")
-                        .font(.system(.title, design: .rounded)).bold()
+                        .titleTwo()
                         .foregroundColor(.white)
                     Text("Have a quote that you like? Want to note down a quick reflection? Athena makes it easy to store your notes and ideas while reading. We want to bring the technological features of ebooks to readers who love physical hardcovers.")
-                        .font(.system(.title3, design: .rounded))
+                        .titleFive()
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
@@ -39,7 +39,7 @@ struct OnboardingThree: View {
                             .frame(height: 44)
                             .foregroundColor(.white.opacity(0.5))
                         Text("Next")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                            .headline()
                             .foregroundColor(.white)
                     }
                 }

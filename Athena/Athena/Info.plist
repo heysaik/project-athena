@@ -11,5 +11,13 @@
 	</dict>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Allow Athena to send you timely reminders to encourage you to keep reading</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FoundersGrotesk-Bold.otf</string>
+		<string>FoundersGrotesk-Medium.otf</string>
+		<string>FoundersGrotesk-Regular.otf</string>
+		<string>FoundersGrotesk-Light.otf</string>
+		<string>FoundersGrotesk-Semibold.otf</string>
+	</array>
 </dict>
 </plist>

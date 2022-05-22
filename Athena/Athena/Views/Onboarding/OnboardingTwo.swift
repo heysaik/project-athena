@@ -23,10 +23,10 @@ struct OnboardingTwo: View {
                     .padding(.horizontal)
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Search for books worldwide")
-                        .font(.system(.title, design: .rounded)).bold()
+                        .titleTwo()
                         .foregroundColor(.white)
                     Text("Athena has the latest information about any book. Powered by Google Books, Athena allows you to search for any book and add it to your library tracker.")
-                        .font(.system(.title3, design: .rounded))
+                        .titleFive()
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
@@ -40,7 +40,7 @@ struct OnboardingTwo: View {
                             .frame(height: 44)
                             .foregroundColor(.white.opacity(0.5))
                         Text("Next")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                            .headline()
                             .foregroundColor(.white)
                     }
                 }

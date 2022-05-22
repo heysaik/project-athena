@@ -37,16 +37,17 @@ struct OnboardingFour: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Create an Account")
-                        .font(.system(.title, design: .rounded)).bold()
+                        .titleTwo()
                         .foregroundColor(.white)
                     Text("Having an Athena account lets you login from any iOS or iPadOS device to quickly access your saved books, notes, and searches!")
-                        .font(.system(.title3, design: .rounded))
+                        .titleFive()
                         .foregroundColor(.white)
                 }
                 .padding(.horizontal)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     TextField("Email", text: $email, prompt: Text("bruce@wayneenterprises.com"))
+                        .font(.custom("FoundersGrotesk-Regular", size: 17))
                         .padding(.horizontal)
                         .keyboardType(.emailAddress)
                         .textCase(.lowercase)
@@ -59,6 +60,7 @@ struct OnboardingFour: View {
                         .frame(height: 44)
                     
                     SecureField("Password", text: $password, prompt: Text("imbatman"))
+                        .font(.custom("FoundersGrotesk-Regular", size: 17))
                         .padding(.horizontal)
                         .textCase(.lowercase)
                         .foregroundColor(.white)
@@ -144,7 +146,7 @@ struct OnboardingFour: View {
                                 .frame(height: 44)
                                 .foregroundColor(.white.opacity(0.5))
                             Text("Signup")
-                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .headline()
                                 .foregroundColor(.white)
                         }
                     }
@@ -179,7 +181,7 @@ struct OnboardingFour: View {
                                 .frame(height: 44)
                                 .foregroundColor(.white.opacity(0.5))
                             Text("Login")
-                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .headline()
                                 .foregroundColor(.white)
                         }
                     }

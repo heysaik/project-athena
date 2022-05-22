@@ -29,7 +29,7 @@ struct NotesView: View {
                     if noteResults.count == 0 {
                         Spacer()
                         Text("You have no notes")
-                            .font(.headline)
+                            .headline()
                         Spacer()
                     } else {
                         ScrollView {
@@ -39,13 +39,13 @@ struct NotesView: View {
                                 } label: {
                                     VStack(alignment: .leading, spacing: 8) {
                                         Text(note.title)
+                                            .titleThree()
                                             .foregroundColor(.white)
-                                            .font(.system(.title3, design: .rounded).bold())
                                             .multilineTextAlignment(.leading)
                                             .lineLimit(0)
                                         Text(note.note)
+                                            .body()
                                             .foregroundColor(.white)
-                                            .font(.system(.body, design: .rounded))
                                             .multilineTextAlignment(.leading)
                                             .lineLimit(3)
                                         Divider()

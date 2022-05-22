@@ -22,9 +22,9 @@ struct NotesEditView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack(alignment: .leading) {
                 TextField("Title", text: $note.title)
-                    .font(.system(.title, design: .rounded).bold())
+                    .font(.custom("FoundersGrotesk-Bold", size: 24))
                 CustomTextEditor(placeholder: "Start typing..", text: $note.note)
-                    .font(.body)
+                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                 Spacer()
             }
             .padding()
@@ -35,6 +35,7 @@ struct NotesEditView: View {
                     dismiss()
                 } label: {
                     Text("Cancel")
+                        .body()
                 }
             })
             
@@ -52,7 +53,7 @@ struct NotesEditView: View {
                     }
                 } label: {
                     Text("Save")
-                        .bold()
+                        .headline()
                 }
             })
         }

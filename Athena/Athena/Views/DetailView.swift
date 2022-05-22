@@ -47,10 +47,10 @@ struct DetailView: View {
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(book.title)
-                                .font(.title3.bold())
+                                .titleThree()
                                 .multilineTextAlignment(.leading)
                             Text(book.authors.formatted(.list(type: .and)))
-                                .font(.caption)
+                                .caption()
                             StarsView(rating: book.googleBooksRating ?? 0.0)
                                 .foregroundColor(Color.yellow)
                         }
@@ -88,7 +88,7 @@ struct DetailView: View {
                                 }
                             } label: {
                                 Label("Mark as Completed", systemImage: "checkmark.circle.fill")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -104,7 +104,7 @@ struct DetailView: View {
                                 self.alertManager.show()
                             } label: {
                                 Label("Update Progress", systemImage: "circle.dashed")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -138,7 +138,7 @@ struct DetailView: View {
                                 }
                             } label: {
                                 Label("Remove from Already Read", systemImage: "rectangle.stack.fill.badge.minus")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -158,7 +158,7 @@ struct DetailView: View {
                                 showLibrarySheet.toggle()
                             } label: {
                                 Label("In Wishlist", systemImage: "checkmark.circle.fill")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -196,7 +196,7 @@ struct DetailView: View {
                                 }
                             } label: {
                                 Label("Add to Wishlist", systemImage: "cart.fill.badge.plus")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -212,7 +212,7 @@ struct DetailView: View {
                                 self.showLibrarySheet.toggle()
                             } label: {
                                 Label("Add to Library", systemImage: "rectangle.stack.fill.badge.plus")
-                                    .font(.system(size: 15, weight: .bold, design: .default))
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
                                     .foregroundColor(.white)
                                     .padding(8)
                                     .background(
@@ -233,16 +233,16 @@ struct DetailView: View {
                             
                             ScrollView {
                                 Text(book.description)
+                                    .body()
                                     .multilineTextAlignment(.leading)
-                                    .font(.system(size: 17, weight: .medium, design: .default))
                                     .padding()
                             }
                             .navigationBarTitle("About the Book")
                         }
                     } label: {
                         Text(book.description)
+                            .body()
                             .multilineTextAlignment(.leading)
-                            .font(.system(size: 17, weight: .medium, design: .default))
                             .foregroundColor(.white)
                             .lineLimit(10)
                             .frame(maxWidth: .infinity)
@@ -257,8 +257,7 @@ struct DetailView: View {
                         // Recommendations
                         VStack(alignment: .leading, spacing: 16) {
                             Text("More from \(book.authors.first!)")
-                                .font(.system(size: 20, weight: .semibold, design: .default))
-                            
+                                .titleFour()
                             ScrollView(.horizontal) {
                                 HStack(alignment: .top, spacing: 16) {
                                     ForEach(recommendedBooks) { book in
@@ -274,7 +273,7 @@ struct DetailView: View {
                                                     .cornerRadius(10, corners: [.bottomRight, .topRight])
                                                     .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
                                                 Text(book.title)
-                                                    .font(.system(size: 17, weight: .semibold, design: .default))
+                                                    .headline()
                                                     .foregroundColor(.white)
                                                     .multilineTextAlignment(.leading)
                                                     .frame(maxHeight: .infinity)
@@ -289,7 +288,7 @@ struct DetailView: View {
                         }
                     } else {
                         Text("No more books from \(book.authors.first!)")
-                            .font(.system(size: 20, weight: .semibold, design: .default))
+                            .titleFour()
                             .padding(.bottom)
                     }
                 }
@@ -440,7 +439,6 @@ struct DetailView: View {
                 if snapshot.documents.count == 1 {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
-                            print(convBook)
                             self.book = convBook
                             
                             self.inWishlist = true
@@ -472,7 +470,6 @@ struct DetailView: View {
                 if snapshot.documents.count == 1 {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
-                            print(convBook)
                             self.book = convBook
                             
                             self.inWishlist = false
@@ -504,7 +501,6 @@ struct DetailView: View {
                 if snapshot.documents.count == 1 {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
-                            print(convBook)
                             self.book = convBook
                             
                             self.inWishlist = false
