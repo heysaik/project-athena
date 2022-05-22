@@ -27,7 +27,7 @@ struct SearchView: View {
                 VStack {
                     if searchTerm.isEmpty {
                         VStack(spacing: 16) {
-                            Text("Search History")
+                            Text(searchHistory.count != 0 ? "Search History" : "Start searching for books")
                                 .headline()
                             ForEach(searchHistory, id: \.self) { term in
                                 Button {
