@@ -16,7 +16,8 @@ struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showLogoutAlert = false
     @State private var showDeleteAlert = false
-    @State private var showEmailAlert = false
+    @State private var showPasswordAlert = false
+    @State private var passwordChangedAlert = false
     @State private var clearCacheAlert = false
     @State private var loggedOut = false
 
@@ -85,21 +86,34 @@ struct SettingsView: View {
                         HStack {
                             Button {
                                 // Change Password
-                                do{
-                                    auth.sendPasswordReset(withEmail: auth.currentUser!.email!) { error in
-                                        if error == nil {
-                                            showEmailAlert = true
-                                        }
-                                    }
-                                }
+                                self.showPasswordAlert.toggle()
                             } label: {
                                 Label("Edit Password", systemImage: "ellipsis.rectangle.fill")
                                     .font(.system(size: 17, design: .rounded))
                             }
                         }
-                        .alert("An email to change your password has been sent to your current email", isPresented: $showEmailAlert){
+                        .alert("Are you sure you want to change your password?", isPresented: $showPasswordAlert) {
+                            Button(role: .cancel) {
+                                
+                            } label: {
+                                Text("Cancel")
+                            }
+                            Button(role: .destructive) {
+                                self.passwordChangedAlert.toggle()
+                                do {
+                                    auth.sendPasswordReset(withEmail: auth.currentUser!.email!) { error in
+                                        if error == nil {
+                                            passwordChangedAlert = true
+                                        }
+                                    }
+                                }
+                            } label: {
+                                Text("Change Password")
+                            }
+                        }
+                        .alert("An email to change your password has been sent to \(auth.currentUser!.email!)", isPresented: $passwordChangedAlert){
                             Button("OK") {
-                                showEmailAlert = false
+                                passwordChangedAlert = false
                             }
                         }
                     }
