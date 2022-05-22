@@ -26,6 +26,12 @@
 		8B5A6FA327FDD799003F56C7 /* OnboardingOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */; };
 		8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */; };
 		8B5A6FA827FDD79D003F56C7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */; };
+		8B71C9262839CFD8005ACDD8 /* FoundersGrotesk-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71C9212839CFD8005ACDD8 /* FoundersGrotesk-Bold.otf */; };
+		8B71C9272839CFD8005ACDD8 /* FoundersGrotesk-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71C9222839CFD8005ACDD8 /* FoundersGrotesk-Light.otf */; };
+		8B71C9282839CFD8005ACDD8 /* FoundersGrotesk-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71C9232839CFD8005ACDD8 /* FoundersGrotesk-Regular.otf */; };
+		8B71C9292839CFD8005ACDD8 /* FoundersGrotesk-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71C9242839CFD8005ACDD8 /* FoundersGrotesk-Semibold.otf */; };
+		8B71C92A2839CFD8005ACDD8 /* FoundersGrotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8B71C9252839CFD8005ACDD8 /* FoundersGrotesk-Medium.otf */; };
+		8B71C92C2839D080005ACDD8 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B71C92B2839D080005ACDD8 /* Font.swift */; };
 		8B747244280FC524006633FF /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B747243280FC523006633FF /* DetailView.swift */; };
 		8B7B98CB2816F2CF001E1D4D /* CollectionViewPagingLayout in Frameworks */ = {isa = PBXBuildFile; productRef = 8B7B98CA2816F2CF001E1D4D /* CollectionViewPagingLayout */; };
 		8B7C61F82807F20100A0E97F /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7C61F72807F20100A0E97F /* RootView.swift */; };
@@ -69,6 +75,12 @@
 		8B5A6FA227FDD799003F56C7 /* OnboardingOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingOne.swift; sourceTree = "<group>"; };
 		8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8B71C9212839CFD8005ACDD8 /* FoundersGrotesk-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FoundersGrotesk-Bold.otf"; sourceTree = "<group>"; };
+		8B71C9222839CFD8005ACDD8 /* FoundersGrotesk-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FoundersGrotesk-Light.otf"; sourceTree = "<group>"; };
+		8B71C9232839CFD8005ACDD8 /* FoundersGrotesk-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FoundersGrotesk-Regular.otf"; sourceTree = "<group>"; };
+		8B71C9242839CFD8005ACDD8 /* FoundersGrotesk-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FoundersGrotesk-Semibold.otf"; sourceTree = "<group>"; };
+		8B71C9252839CFD8005ACDD8 /* FoundersGrotesk-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "FoundersGrotesk-Medium.otf"; sourceTree = "<group>"; };
+		8B71C92B2839D080005ACDD8 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		8B747243280FC523006633FF /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		8B7C61F72807F20100A0E97F /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		8B7C61F92807F21B00A0E97F /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
@@ -182,6 +194,7 @@
 				8B54105D280E25FC00FD1A90 /* Views */,
 				8B5A6FA427FDD79D003F56C7 /* Assets.xcassets */,
 				8B94E9FF2802A06D009A0D36 /* GoogleService-Info.plist */,
+				8B71C9202839CDE5005ACDD8 /* Fonts */,
 				8B5A6FA627FDD79D003F56C7 /* Preview Content */,
 			);
 			path = Athena;
@@ -193,6 +206,18 @@
 				8B5A6FA727FDD79D003F56C7 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8B71C9202839CDE5005ACDD8 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				8B71C9212839CFD8005ACDD8 /* FoundersGrotesk-Bold.otf */,
+				8B71C9222839CFD8005ACDD8 /* FoundersGrotesk-Light.otf */,
+				8B71C9252839CFD8005ACDD8 /* FoundersGrotesk-Medium.otf */,
+				8B71C9232839CFD8005ACDD8 /* FoundersGrotesk-Regular.otf */,
+				8B71C9242839CFD8005ACDD8 /* FoundersGrotesk-Semibold.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		8B7C61F62807F1EA00A0E97F /* Onboarding */ = {
@@ -209,6 +234,7 @@
 		8BCF15412814DE26000A375B /* Helper Views */ = {
 			isa = PBXGroup;
 			children = (
+				8B71C92B2839D080005ACDD8 /* Font.swift */,
 				8BCF15422814DE36000A375B /* StarsView.swift */,
 				8B4F2D282821B3080011D33D /* ProgressCircleView.swift */,
 			);
@@ -291,8 +317,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B71C9282839CFD8005ACDD8 /* FoundersGrotesk-Regular.otf in Resources */,
 				8B5A6FA827FDD79D003F56C7 /* Preview Assets.xcassets in Resources */,
 				8B5A6FA527FDD79D003F56C7 /* Assets.xcassets in Resources */,
+				8B71C9292839CFD8005ACDD8 /* FoundersGrotesk-Semibold.otf in Resources */,
+				8B71C92A2839CFD8005ACDD8 /* FoundersGrotesk-Medium.otf in Resources */,
+				8B71C9272839CFD8005ACDD8 /* FoundersGrotesk-Light.otf in Resources */,
+				8B71C9262839CFD8005ACDD8 /* FoundersGrotesk-Bold.otf in Resources */,
 				8B94EA002802A06D009A0D36 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,6 +355,7 @@
 				8B541060280E261500FD1A90 /* SwiftyJSON.swift in Sources */,
 				8B4F2D292821B3080011D33D /* ProgressCircleView.swift in Sources */,
 				8B5A6FA127FDD799003F56C7 /* AthenaApp.swift in Sources */,
+				8B71C92C2839D080005ACDD8 /* Font.swift in Sources */,
 				8B0005442807EF0600ED855C /* OnboardingTwo.swift in Sources */,
 				8B541057280E1C5100FD1A90 /* Book.swift in Sources */,
 				8B551FAF282754CD00886FAB /* NotificationsView.swift in Sources */,

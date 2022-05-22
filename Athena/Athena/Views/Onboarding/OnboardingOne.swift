@@ -21,10 +21,10 @@ struct OnboardingOne: View {
                         .frame(height: 150)
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Welcome to Athena")
-                            .font(.system(.title, design: .rounded)).bold()
+                            .titleTwo()
                             .foregroundColor(.white)
                         Text("Athena is the app for readers around the world, helping you keep track of the books you've already read, are currently reading, and wish to read. We want to encourage you to build the habit of reading.")
-                            .font(.system(.title3, design: .rounded))
+                            .titleFive()
                             .foregroundColor(.white)
                     }
                     .padding(.horizontal)
@@ -38,7 +38,7 @@ struct OnboardingOne: View {
                                 .frame(height: 44)
                                 .foregroundColor(.white.opacity(0.5))
                             Text("Next")
-                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .headline()
                                 .foregroundColor(.white)
                         }
                     }

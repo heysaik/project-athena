@@ -19,8 +19,9 @@ struct SettingsView: View {
     @State private var showPasswordAlert = false
     @State private var passwordChangedAlert = false
     @State private var clearCacheAlert = false
+    @State private var showSearchClearedAlert = false
     @State private var loggedOut = false
-
+    
     @State private var newName = ""
     @State private var newEmail = ""
     @State private var username = ""
@@ -28,7 +29,7 @@ struct SettingsView: View {
     @StateObject var nameAlertManager = CustomAlertManager()
     @StateObject var emailAlertManager = CustomAlertManager()
     @StateObject var authAlertManager = CustomAlertManager()
-
+    
     // Used to show the gradient
     init() {
         UITableView.appearance().backgroundColor = .clear
@@ -49,7 +50,7 @@ struct SettingsView: View {
                                 // Show Insights
                             } label: {
                                 Label("Insights", systemImage: "chart.xyaxis.line")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                         HStack {
@@ -57,7 +58,7 @@ struct SettingsView: View {
                                 NotificationsView()
                             } label: {
                                 Label("Push Notifications", systemImage: "bell.badge.fill")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                     }
@@ -70,7 +71,7 @@ struct SettingsView: View {
                                 nameAlertManager.show()
                             } label: {
                                 Label("Edit Name", systemImage: "person.fill")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                                 
                             }
                         }
@@ -80,7 +81,7 @@ struct SettingsView: View {
                                 authAlertManager.show()
                             } label: {
                                 Label("Edit Email", systemImage: "envelope.fill")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                         HStack {
@@ -89,7 +90,7 @@ struct SettingsView: View {
                                 self.showPasswordAlert.toggle()
                             } label: {
                                 Label("Edit Password", systemImage: "ellipsis.rectangle.fill")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                         .alert("Are you sure you want to change your password?", isPresented: $showPasswordAlert) {
@@ -127,10 +128,32 @@ struct SettingsView: View {
                                 SDImageCache.shared.clear(with: .all)
                             } label: {
                                 Label("Clear Cache", systemImage: "trash.slash.circle")
-                                    .font(.system(size: 17, design: .rounded))
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                             .alert(isPresented: $clearCacheAlert) {
-                                        Alert(title: Text("Your cache was cleared."))
+                                Alert(title: Text("Your cache was cleared."))
+                            }
+                        }
+                        
+                        HStack {
+                            Button {
+                                // Clear Search History
+                                Task{
+                                    let ref = Firestore.firestore()
+                                        .collection("private")
+                                        .document(Auth.auth().currentUser!.uid)
+                                    try await ref
+                                        .updateData([
+                                            "searchHistory": []
+                                        ])
+                                    showSearchClearedAlert.toggle()
+                                }
+                            } label: {
+                                Label("Clear Search History", systemImage: "magnifyingglass.circle.fill")
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
+                            }
+                            .alert(isPresented: $showSearchClearedAlert) {
+                                Alert(title: Text("Your search history was cleared."))
                             }
                         }
                         
@@ -140,8 +163,7 @@ struct SettingsView: View {
                                 self.showLogoutAlert.toggle()
                             } label: {
                                 Label("Log Out", systemImage: "arrowtriangle.backward.square.fill")
-                                    .font(.system(size: 17, design: .rounded))
-                                
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                         .alert("Are you sure you want to log out?", isPresented: $showLogoutAlert) {
@@ -169,8 +191,7 @@ struct SettingsView: View {
                                 showDeleteAlert.toggle()
                             } label: {
                                 Label("Delete Account", systemImage: "trash.circle.fill")
-                                    .font(.system(size: 17, design: .rounded))
-                                
+                                    .font(.custom("FoundersGrotesk-Regular", size: 17))
                             }
                         }
                         .alert("Are you sure?", isPresented: $showDeleteAlert, actions: {

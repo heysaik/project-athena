@@ -25,15 +25,10 @@ struct NotesDetailView: View {
                 .edgesIgnoringSafeArea(.all)
             
             // TODO: ADD BOOK VIEW HERE MAKE IT LOOK SIMILAR TO SEARCH RESULTS BOOK VIEW
-            
             ScrollView {
-                VStack(alignment: .leading) {
-                    Text(note.note)
-                        .lineLimit(0)
-                        .multilineTextAlignment(.leading)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .padding()
+                Text(note.note)
+                    .multilineTextAlignment(.leading)
+                    .padding()
             }
         }
         .navigationTitle(note.title)

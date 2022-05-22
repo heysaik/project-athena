@@ -32,7 +32,7 @@ struct ProfileView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         if let user = auth.currentUser, let email = user.email {
                             Text(email)
-                                .font(.system(size: 25, design: .rounded))
+                                .titleTwo()
                                 .foregroundColor(.white)
                         }
                         ScrollView {
@@ -47,7 +47,7 @@ struct ProfileView: View {
                                                 .frame(height: 27)
                                                 .foregroundColor(.white.opacity(1))
                                             Text("Already Read")
-                                                .font(.system(size: 18, design: .rounded))
+                                                .body()
                                                 .foregroundColor(.black)
                                         }
                                     } else {
@@ -56,7 +56,7 @@ struct ProfileView: View {
                                                 .frame(height: 27)
                                                 .foregroundColor(.white.opacity(0))
                                             Text("Already Read")
-                                                .font(.system(size: 18, design: .rounded))
+                                                .body()
                                                 .foregroundColor(.white)
                                         }
                                     }
@@ -71,7 +71,7 @@ struct ProfileView: View {
                                                 .frame(height: 27)
                                                 .foregroundColor(.white.opacity(0))
                                             Text("Wishlist")
-                                                .font(.system(size: 18, design: .rounded))
+                                                .body()
                                                 .foregroundColor(.white)
                                         }
                                     } else {
@@ -81,7 +81,7 @@ struct ProfileView: View {
                                                     .frame(height: 27)
                                                     .foregroundColor(.white.opacity(1))
                                                 Text("Wishlist")
-                                                    .font(.system(size: 18, design: .rounded))
+                                                    .body()
                                                     .foregroundColor(.black)
                                             }
                                         }
@@ -96,7 +96,7 @@ struct ProfileView: View {
                                     VStack(spacing: 16) {
                                         Image(systemName: "list.star")
                                         Text("You do not have any books on your wishlist.")
-                                            .font(.system(size: 19, weight: .semibold, design: .default))
+                                            .headline()
                                             .multilineTextAlignment(.center)
                                     }
                                     .foregroundColor(.white)
@@ -119,14 +119,15 @@ struct ProfileView: View {
                                                             .cornerRadius(5, corners: [.topLeft, .bottomLeft])
                                                             .cornerRadius(13, corners: [.bottomRight, .topRight])
                                                         Text(book.title)
+                                                            .titleFour()
                                                             .foregroundColor(.white)
-                                                            .font(.system(size: 20, weight: .semibold, design: .default))
                                                             .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
                                                         // Tried to use "format" to format authors, but it would not work
                                                         ForEach (book.authors, id: \.self) { author in
 //                                                            Text(author, format: .list(type: .and))
                                                             Text(author)
-                                                                .font(.system(size: 16, weight: .light, design: .default))
+                                                                .caption()
+                                                                .italic()
                                                                 .foregroundColor(.white)
                                                         }
 //                                                      TODO: We can add this when we get to ratings
@@ -150,7 +151,7 @@ struct ProfileView: View {
                                     VStack(spacing: 16) {
                                         Image(systemName: "book.closed")
                                         Text("You have not read any books yet.")
-                                            .font(.system(size: 19, weight: .semibold, design: .default))
+                                            .headline()
                                             .multilineTextAlignment(.center)
                                     }
                                     .foregroundColor(.white)
@@ -173,14 +174,14 @@ struct ProfileView: View {
                                                             .cornerRadius(5, corners: [.topLeft, .bottomLeft])
                                                             .cornerRadius(13, corners: [.bottomRight, .topRight])
                                                         Text(book.title)
+                                                            .titleFour()
                                                             .foregroundColor(.white)
-                                                            .font(.system(size: 20, weight: .semibold, design: .default))
                                                             .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
                                                         // Tried to use "format" to format authors, but it would not work
                                                         ForEach (book.authors, id: \.self) { author in
 //                                                            Text(author, format: .list(type: .and))
                                                             Text(author)
-                                                                .font(.system(size: 16, weight: .light, design: .default))
+                                                                .caption()
                                                                 .foregroundColor(.white)
                                                         }
     //                                                      TODO: We can add this when we get to ratings

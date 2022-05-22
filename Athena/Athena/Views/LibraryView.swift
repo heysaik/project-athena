@@ -18,6 +18,11 @@ struct LibraryView: View {
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
+    init() {
+        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "FoundersGrotesk-Bold", size: 34)!]
+        UINavigationBar.appearance().titleTextAttributes = [.font : UIFont(name: "FoundersGrotesk-Medium", size: 20)!]
+    }
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -32,7 +37,7 @@ struct LibraryView: View {
                     HStack {
                         Text("Currently Reading")
                             .foregroundColor(.white)
-                            .font(.system(size: 24))
+                            .titleTwo()
                         Spacer()
                     }
                     .padding(.horizontal)
@@ -42,7 +47,7 @@ struct LibraryView: View {
                         VStack(spacing: 16) {
                             Image(systemName: "books.vertical")
                             Text("You are not reading any books at the moment. Go ahead and add some books to your Library")
-                                .font(.system(size: 19, weight: .semibold, design: .default))
+                                .headline()
                                 .multilineTextAlignment(.center)
                         }
                         .foregroundColor(.white)
@@ -75,10 +80,10 @@ struct LibraryView: View {
                             VStack(alignment: .center, spacing: 8) {
                                 Text(currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.title ?? "")
                                     .foregroundColor(.white)
-                                    .font(.system(size: 20, weight: .semibold, design: .default))
-
+                                    .titleThree()
+                                
                                 Text((currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.authors ?? []).formatted(.list(type: .and)))
-                                    .font(.system(size: 16, weight: .light, design: .default))
+                                    .caption()
                                     .foregroundColor(.white)
                                 
                                 // TODO: Progress View

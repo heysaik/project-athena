@@ -27,35 +27,17 @@ struct SearchView: View {
                 VStack {
                     if searchTerm.isEmpty {
                         VStack(spacing: 16) {
-                            Text("Search History")
-                                .font(.headline)
+                            Text(searchHistory.count != 0 ? "Search History" : "Start searching for books")
+                                .headline()
                             ForEach(searchHistory, id: \.self) { term in
                                 Button {
                                     searchTerm = term.id
                                 } label: {
                                     Text(term.id)
+                                        .body()
                                         .foregroundColor(.white)
                                 }
                                 .tint(.white)
-                            }
-                            HStack {
-                                Button {
-                                    // Clear Search History
-                                    searchHistory.removeAll()
-                                    Task{
-                                        let ref = Firestore.firestore()
-                                            .collection("private")
-                                            .document(Auth.auth().currentUser!.uid)
-                                        try await ref
-                                            .updateData([
-                                                "searchHistory": searchHistory.map { ["id": $0.id, "date": $0.date] }
-                                            ])
-                                    }
-                                } label: {
-                                    Text("Clear Search History")
-                                        .font(.system(size: 17, design: .rounded))
-                                    
-                                }
                             }
                         }
                     } else {
@@ -80,19 +62,22 @@ struct SearchView: View {
                                                     
                                                     VStack(alignment: .leading, spacing: 8) {
                                                         Text(book.title)
-                                                            .font(.title3.bold())
+                                                            .titleThree()
                                                             .lineLimit(1)
                                                             .multilineTextAlignment(.leading)
                                                         Text(book.description)
-                                                            .font(.body)
+                                                            .body()
                                                             .lineLimit(2)
                                                             .multilineTextAlignment(.leading)
                                                         HStack {
                                                             Text(book.authors.formatted(.list(type: .and)))
+                                                                .caption2()
+                                                                .italic()
                                                             Spacer()
                                                             Text("\(book.pageCount) pages")
+                                                                .caption2()
+                                                                .italic()
                                                         }
-                                                        .font(.caption.italic())
                                                         .opacity(0.8)
                                                         .lineLimit(1)
                                                     }
