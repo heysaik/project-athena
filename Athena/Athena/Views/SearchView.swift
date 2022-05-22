@@ -16,6 +16,7 @@ struct SearchView: View {
     private let booksManager = GoogleBooksManager.shared
     @State private var bookResults = [Book]()
     @State private var searchHistory = [SearchTerm]()
+    @State private var clearSearchHistory = false
     
     var body: some View {
         NavigationView {
@@ -36,6 +37,25 @@ struct SearchView: View {
                                         .foregroundColor(.white)
                                 }
                                 .tint(.white)
+                            }
+                            HStack {
+                                Button {
+                                    // Clear Search History
+                                    searchHistory.removeAll()
+                                    Task{
+                                        let ref = Firestore.firestore()
+                                            .collection("private")
+                                            .document(Auth.auth().currentUser!.uid)
+                                        try await ref
+                                            .updateData([
+                                                "searchHistory": searchHistory.map { ["id": $0.id, "date": $0.date] }
+                                            ])
+                                    }
+                                } label: {
+                                    Text("Clear Search History")
+                                        .font(.system(size: 17, design: .rounded))
+                                    
+                                }
                             }
                         }
                     } else {
