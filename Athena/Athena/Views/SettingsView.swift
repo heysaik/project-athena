@@ -111,7 +111,7 @@ struct SettingsView: View {
                                 Text("Change Password")
                             }
                         }
-                        .alert("An email to change your password has been sent to \(auth.currentUser!.email!)", isPresented: $passwordChangedAlert){
+                        .alert("Please check your email to reset your password", isPresented: $passwordChangedAlert){
                             Button("OK") {
                                 passwordChangedAlert = false
                             }

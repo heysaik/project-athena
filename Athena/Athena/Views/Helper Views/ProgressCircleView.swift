@@ -26,7 +26,6 @@ struct ProgressCircleView: View {
             .fill(Color.blue)
             .opacity(0.2)
             
-            
             Path { path in
                 path.addArc(
                     center: CGPoint(x: 95, y: 95),
@@ -44,8 +43,16 @@ struct ProgressCircleView: View {
                 )
             )
             
-            Text("\(Double(current ?? 0)/Double(total) * 100, specifier: "%.0f")%")
-                .font(.system(size: 45, weight: .bold, design: .rounded))
+            VStack(alignment: .center, spacing: 4) {
+                Text("\(Double(current ?? 0)/Double(total) * 100, specifier: "%.0f")%")
+                    .font(.system(size: 45, weight: .bold, design: .rounded))
+                Text("\(current ?? 0)/\(total) pages read")
+                    .font(.subheadline.bold())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(maxWidth: 180, alignment: .center)
         }
         .frame(width: 190, height: 190, alignment: .center)
         .padding()
