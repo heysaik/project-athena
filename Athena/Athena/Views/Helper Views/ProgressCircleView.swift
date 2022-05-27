@@ -10,7 +10,7 @@ import SwiftUI
 struct ProgressCircleView: View {
     @Binding var current: Int?
     var total: Int
-        
+    
     var body: some View {
         ZStack {
             Path { path in
@@ -46,11 +46,14 @@ struct ProgressCircleView: View {
             VStack(alignment: .center, spacing: 4) {
                 Text("\(Double(current ?? 0)/Double(total) * 100, specifier: "%.0f")%")
                     .font(.custom("FoundersGrotesk-Bold", size: 45))
+                    .foregroundColor(.white)
+                
                 Text("\(current ?? 0)/\(total) pages read")
                     .caption()
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)
+                    .foregroundColor(.white)
             }
             .frame(maxWidth: 180, alignment: .center)
         }

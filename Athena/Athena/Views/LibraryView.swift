@@ -18,11 +18,6 @@ struct LibraryView: View {
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
-    init() {
-        UINavigationBar.appearance().largeTitleTextAttributes = [.font : UIFont(name: "FoundersGrotesk-Bold", size: 34)!]
-        UINavigationBar.appearance().titleTextAttributes = [.font : UIFont(name: "FoundersGrotesk-Medium", size: 20)!]
-    }
-    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -56,24 +51,19 @@ struct LibraryView: View {
                     } else {
                         VStack(alignment: .center, spacing: 24) {
                             StackPageView(currentlyReadingBooks, selection: $selectedBookID) { book in
-                                Button {
-                                    // Open Album
+                                NavigationLink {
+                                    DetailView(book: book)
                                 } label: {
-                                    NavigationLink {
-                                        DetailView(book: book)
-                                    } label: {
-                                        WebImage(url: URL(string: book.imageLink))
-                                            .resizable()
-                                            .aspectRatio(0.66, contentMode: .fit)
-                                            .frame(width: geometry.size.width * 0.9)
-                                            .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                            .cornerRadius(13, corners: [.bottomRight, .topRight])
-    //                                        .shadow(color: .black.opacity(0.5), radius: 20, x: 0, y: 10)
-                                    }
-                                    .buttonStyle(FlatLinkStyle())
-                                    .aspectRatio(0.66, contentMode: .fit)
-                                    .frame(width: geometry.size.width * 0.9)
+                                    WebImage(url: URL(string: book.imageLink))
+                                        .resizable()
+                                        .aspectRatio(0.66, contentMode: .fit)
+                                        .frame(width: geometry.size.width * 0.9)
+                                        .cornerRadius(5, corners: [.topLeft, .bottomLeft])
+                                        .cornerRadius(13, corners: [.bottomRight, .topRight])
                                 }
+                                .buttonStyle(FlatLinkStyle())
+                                .aspectRatio(0.66, contentMode: .fit)
+                                .frame(width: geometry.size.width * 0.9)
                             }
                             .options(StackTransformViewOptions.layout(.perspective))
 
@@ -87,20 +77,13 @@ struct LibraryView: View {
                                     .foregroundColor(.white)
                                 
                                 // TODO: Progress View
-                                
-                                // TODO: We can add this when we get to ratings
-    //                            ForEach(0..<5) { i in
-    //                                Image(systemName: "star.fill")
-    //                                    .font(.system(size: 16))
-    //                                    .foregroundColor(.yellow)
-    //                            }
                             }
                         }
                         .padding()
                     }
                 }
             }
-            .navigationTitle("Library")
+            .navigationTitle(("Library"))
             .tint(.white)
             .onAppear {
                 if let user = auth.currentUser {

@@ -13,13 +13,14 @@ import SDWebImageSwiftUI
 
 struct ProfileView: View {
     @State private var user = Auth.auth().currentUser
-    @State private var showAlreadyRead = true // If its false then it shows the wishlist
+    @State private var selectedSegment = "Already Read"
     @State private var wishlistedBooks = [Book]()
     @State private var alreadyReadBooks = [Book]()
     @State private var selectedBookID: Book.ID? = nil
     @State private var showSettingsView = false
+    
     private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)] // for already read and wishlist
-  
+    private let segments = ["Already Read", "Wishlist"]
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
  
@@ -36,61 +37,15 @@ struct ProfileView: View {
                                 .foregroundColor(.white)
                         }
                         ScrollView {
-                            HStack(alignment: .top, spacing: 8) {
-                                Button {
-                                    // Already Read
-                                    showAlreadyRead = true
-                                } label: {
-                                    if showAlreadyRead {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .frame(height: 27)
-                                                .foregroundColor(.white.opacity(1))
-                                            Text("Already Read")
-                                                .body()
-                                                .foregroundColor(.black)
-                                        }
-                                    } else {
-                                        ZStack{
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .frame(height: 27)
-                                                .foregroundColor(.white.opacity(0))
-                                            Text("Already Read")
-                                                .body()
-                                                .foregroundColor(.white)
-                                        }
-                                    }
-                                }
-                                Button {
-                                    // Wishlist
-                                    showAlreadyRead = false
-                                } label: {
-                                    if showAlreadyRead {
-                                        ZStack{
-                                            RoundedRectangle(cornerRadius: 5)
-                                                .frame(height: 27)
-                                                .foregroundColor(.white.opacity(0))
-                                            Text("Wishlist")
-                                                .body()
-                                                .foregroundColor(.white)
-                                        }
-                                    } else {
-                                        VStack {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 5)
-                                                    .frame(height: 27)
-                                                    .foregroundColor(.white.opacity(1))
-                                                Text("Wishlist")
-                                                    .body()
-                                                    .foregroundColor(.black)
-                                            }
-                                        }
-                                    }
+                            Picker("", selection: $selectedSegment) {
+                                ForEach(segments, id:\.self) {
+                                    Text($0)
                                 }
                             }
-                            .padding(.vertical)
+                            .pickerStyle(.segmented)
                           
-                            if !showAlreadyRead { // If the user is clicked on "wishlist"
+                            if selectedSegment == "Wishlist" {
+                                // If the user is clicked on "wishlist"
                                 if wishlistedBooks.count == 0 {
                                     Spacer()
                                     VStack(spacing: 16) {
@@ -105,47 +60,23 @@ struct ProfileView: View {
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid) {
                                         ForEach (wishlistedBooks) { book in
-                                            Button {
-                                                // Open Album
+                                            NavigationLink {
+                                                DetailView(book: book)
                                             } label: {
-                                                NavigationLink {
-                                                    DetailView(book: book)
-                                                } label: {
-                                                    VStack{
-                                                        WebImage(url: URL(string: book.imageLink))
-                                                            .resizable()
-                                                            .aspectRatio(0.66, contentMode: .fit)
-                                                            .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
-                                                            .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                                            .cornerRadius(13, corners: [.bottomRight, .topRight])
-                                                        Text(book.title)
-                                                            .titleFour()
-                                                            .foregroundColor(.white)
-                                                            .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
-                                                        // Tried to use "format" to format authors, but it would not work
-                                                        ForEach (book.authors, id: \.self) { author in
-//                                                            Text(author, format: .list(type: .and))
-                                                            Text(author)
-                                                                .caption()
-                                                                .italic()
-                                                                .foregroundColor(.white)
-                                                        }
-//                                                      TODO: We can add this when we get to ratings
-//                                                      ForEach(0..<5) { i in
-//                                                          Image(systemName: "star.fill")
-//                                                              .font(.system(size: 16))
-//                                                              .foregroundColor(.yellow)
-//                                                      }
-                                                    }
- 
-                                                }
-                                                .aspectRatio(0.66, contentMode: .fit)
-                                                .frame(width: geometry.size.width * 0.4)
+                                                WebImage(url: URL(string: book.imageLink))
+                                                    .resizable()
+                                                    .aspectRatio(0.66, contentMode: .fit)
+                                                    .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
+                                                    .cornerRadius(5, corners: [.topLeft, .bottomLeft])
+                                                    .cornerRadius(13, corners: [.bottomRight, .topRight])
                                             }
+                                            .aspectRatio(0.66, contentMode: .fit)
+                                            .frame(width: geometry.size.width * 0.4)
                                         }
                                     }
                                 }
-                            } else { // // If the user is clicked on "already read"
+                            } else {
+                                // If the user is clicked on "already read"
                                 if alreadyReadBooks.count == 0 {
                                     Spacer()
                                     VStack(spacing: 16) {
@@ -160,42 +91,18 @@ struct ProfileView: View {
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid) {
                                         ForEach (alreadyReadBooks) { book in
-                                            Button {
-                                                // Open Album
+                                            NavigationLink {
+                                                DetailView(book: book)
                                             } label: {
-                                                NavigationLink {
-                                                    DetailView(book: book)
-                                                } label: {
-                                                    VStack{
-                                                        WebImage(url: URL(string: book.imageLink))
-                                                            .resizable()
-                                                            .aspectRatio(0.66, contentMode: .fit)
-                                                            .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
-                                                            .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                                            .cornerRadius(13, corners: [.bottomRight, .topRight])
-                                                        Text(book.title)
-                                                            .titleFour()
-                                                            .foregroundColor(.white)
-                                                            .fixedSize(horizontal: false, vertical: true) // some titles are long - do we always want it to show the full title?
-                                                        // Tried to use "format" to format authors, but it would not work
-                                                        ForEach (book.authors, id: \.self) { author in
-//                                                            Text(author, format: .list(type: .and))
-                                                            Text(author)
-                                                                .caption()
-                                                                .foregroundColor(.white)
-                                                        }
-    //                                                      TODO: We can add this when we get to ratings
-    //                                                      ForEach(0..<5) { i in
-    //                                                          Image(systemName: "star.fill")
-    //                                                              .font(.system(size: 16))
-    //                                                              .foregroundColor(.yellow)
-    //                                                      }
-                                                    }
-
-                                                }
-                                                .aspectRatio(0.66, contentMode: .fit)
-                                                .frame(width: geometry.size.width * 0.4)
+                                                WebImage(url: URL(string: book.imageLink))
+                                                    .resizable()
+                                                    .aspectRatio(0.66, contentMode: .fit)
+                                                    .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
+                                                    .cornerRadius(5, corners: [.topLeft, .bottomLeft])
+                                                    .cornerRadius(13, corners: [.bottomRight, .topRight])
                                             }
+                                            .aspectRatio(0.66, contentMode: .fit)
+                                            .frame(width: geometry.size.width * 0.4)
                                         }
                                     }
                                 }

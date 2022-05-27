@@ -51,6 +51,7 @@ struct SettingsView: View {
                             } label: {
                                 Label("Insights", systemImage: "chart.xyaxis.line")
                                     .font(.custom("FoundersGrotesk-Regular", size: 17))
+                                    .foregroundColor(.white)
                             }
                         }
                         HStack {
@@ -59,6 +60,7 @@ struct SettingsView: View {
                             } label: {
                                 Label("Push Notifications", systemImage: "bell.badge.fill")
                                     .font(.custom("FoundersGrotesk-Regular", size: 17))
+                                    .foregroundColor(.white)
                             }
                         }
                     }

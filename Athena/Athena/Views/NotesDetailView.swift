@@ -29,6 +29,7 @@ struct NotesDetailView: View {
                 Text(note.note)
                     .multilineTextAlignment(.leading)
                     .padding()
+                    .foregroundColor(.white)
             }
         }
         .navigationTitle(note.title)

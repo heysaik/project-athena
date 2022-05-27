@@ -29,6 +29,7 @@ struct SearchView: View {
                         VStack(spacing: 16) {
                             Text(searchHistory.count != 0 ? "Search History" : "Start searching for books")
                                 .headline()
+                                .foregroundColor(.white)
                             ForEach(searchHistory, id: \.self) { term in
                                 Button {
                                     searchTerm = term.id
@@ -44,6 +45,7 @@ struct SearchView: View {
                         ScrollView {
                             if bookResults.count == 0 {
                                 Text("No results")
+                                    .foregroundColor(.white)
                             } else {
                                 VStack(spacing: 8) {
                                     ForEach(bookResults) { book in
@@ -100,8 +102,8 @@ struct SearchView: View {
                     }
                 }
             }
+            .preferredColorScheme(.dark)
             .navigationTitle("Search")
-            .tint(.white)
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always))
             .onAppear {
                 Task {
