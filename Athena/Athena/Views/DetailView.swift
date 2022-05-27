@@ -20,6 +20,7 @@ struct DetailView: View {
     @State private var showLibrarySheet = false
     @State private var recommendedBooks = [Book]()
     @State private var alertText = ""
+    @State private var showInvalidProgressAlert = false
     
     private let booksManager = GoogleBooksManager.shared
     
@@ -48,9 +49,11 @@ struct DetailView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text(book.title)
                                 .titleThree()
+                                .foregroundColor(.white)
                                 .multilineTextAlignment(.leading)
                             Text(book.authors.formatted(.list(type: .and)))
                                 .caption()
+                                .foregroundColor(.white)
                             StarsView(rating: book.googleBooksRating ?? 0.0)
                                 .foregroundColor(Color.yellow)
                         }
@@ -236,6 +239,7 @@ struct DetailView: View {
                                     .body()
                                     .multilineTextAlignment(.leading)
                                     .padding()
+                                    .foregroundColor(.white)
                             }
                             .navigationBarTitle("About the Book")
                         }
@@ -258,6 +262,7 @@ struct DetailView: View {
                         VStack(alignment: .leading, spacing: 16) {
                             Text("More from \(book.authors.first!)")
                                 .titleFour()
+                                .foregroundColor(.white)
                             ScrollView(.horizontal) {
                                 HStack(alignment: .top, spacing: 16) {
                                     ForEach(recommendedBooks) { book in
@@ -289,6 +294,7 @@ struct DetailView: View {
                     } else {
                         Text("No more books from \(book.authors.first!)")
                             .titleFour()
+                            .foregroundColor(.white)
                             .padding(.bottom)
                     }
                 }
@@ -308,12 +314,38 @@ struct DetailView: View {
         }, buttons: [
             .cancel(content: {
                 Text("Cancel")
+                    .foregroundColor(.blue)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }),
             .regular(content: {
                 Text("Update")
+                    .foregroundColor(.blue)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }, action: {
-                if let page = Int(alertText) {
+                if let page = Int(alertText), page <= book.pageCount {
                     book.pagesRead = page
+                    
+                    if page == book.pageCount {
+                        Task {
+                            if var convertedBook = book.convertToDict() {
+                                convertedBook["readerID"] = Auth.auth().currentUser!.uid
+                                
+                                try await Firestore.firestore()
+                                    .collection("alreadyRead")
+                                    .document(book.docID)
+                                    .setData(convertedBook)
+                                
+                                try await Firestore.firestore()
+                                    .collection("wishlist")
+                                    .document(book.docID)
+                                    .delete()
+                                
+                                getAllBookTypes()
+                            }
+                        }
+                    }
+                } else {
+                    showInvalidProgressAlert.toggle()
                 }
             })
         ])
@@ -411,6 +443,17 @@ struct DetailView: View {
                 try await updateProgress(to: book.pagesRead ?? 0)
             }
         }
+        .alert("Please enter a valid value", isPresented: $showInvalidProgressAlert) {
+            Button(role: .cancel) {
+                
+            } label: {
+                Text("OK")
+            }
+
+        } message: {
+            Text("Please enter a number between 0-\(book.pageCount)")
+        }
+
     }
     
     func getRecommendedAuthors() {

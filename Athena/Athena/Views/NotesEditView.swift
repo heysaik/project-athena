@@ -120,6 +120,7 @@ struct CustomTextEditor: View {
             }
             
             TextEditor(text: $text)
+                .foregroundColor(.white)
         }
     }
 }
