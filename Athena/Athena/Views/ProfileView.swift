@@ -89,7 +89,7 @@ struct ProfileView: View {
                                     .padding(.horizontal)
                                     Spacer()
                                 } else {
-                                    LazyVGrid(columns: twoColumnGrid) {
+                                    LazyVGrid(columns: twoColumnGrid, spacing: 30) {
                                         ForEach (alreadyReadBooks) { book in
                                             NavigationLink {
                                                 DetailView(book: book)
