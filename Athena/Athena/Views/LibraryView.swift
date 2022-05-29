@@ -14,11 +14,14 @@ import CollectionViewPagingLayout
 struct LibraryView: View {
     @State private var currentlyReadingBooks = [Book]()
     @State private var selectedBookID: Book.ID? = nil
-
+    //@State private var isExpanded = false
+    @State private var selection = "Title"
+    @State private var options =  [ "author" , "title"]
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
     var body: some View {
+      
         NavigationView {
             GeometryReader { geometry in
                 LinearGradient(
@@ -36,6 +39,23 @@ struct LibraryView: View {
                         Spacer()
                     }
                     .padding(.horizontal)
+                    
+//                  VStack {
+                    Picker("Select a paint color", selection: $selection) {
+                        Button(action: {
+                            self.currentlyReadingBooks.sort(by: {$0.title < $1.title})
+                        }, label: {
+                            Text("Sort by Title")
+                        })
+                        Button(action: {
+                            self.currentlyReadingBooks.sort(by: {$0.authors[0] < $1.authors[0]})
+                        }, label: {
+                            Text("Sort by Author")
+                        })
+                    }
+                    .pickerStyle(.menu)
+                
+                
                     
                     if currentlyReadingBooks.count == 0 {
                         Spacer()
