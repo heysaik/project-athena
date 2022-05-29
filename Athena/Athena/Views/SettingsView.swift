@@ -299,9 +299,11 @@ struct SettingsView: View {
                 }, buttons: [
                     .cancel(content: {
                         Text("Cancel")
+                        .foregroundColor(.black)
                     }),
                     .regular(content: {
                         Text("Update")
+                        .foregroundColor(.black)
                     }, action: {
                         if let userID = auth.currentUser?.uid {
                             Firestore.firestore()
@@ -335,9 +337,12 @@ struct SettingsView: View {
                 }, buttons: [
                     .cancel(content: {
                         Text("Cancel")
+                        .foregroundColor(.black)
+                        
                     }),
                     .regular(content: {
                         Text("Login")
+                        .foregroundColor(.black)
                     }, action: {
                         let credential = EmailAuthProvider.credential(withEmail: username, password: password)
                         

@@ -49,37 +49,84 @@ struct LibraryView: View {
                         .padding(.horizontal)
                         Spacer()
                     } else {
-                        VStack(alignment: .center, spacing: 24) {
-                            StackPageView(currentlyReadingBooks, selection: $selectedBookID) { book in
-                                NavigationLink {
-                                    DetailView(book: book)
-                                } label: {
-                                    WebImage(url: URL(string: book.imageLink))
-                                        .resizable()
-                                        .aspectRatio(0.66, contentMode: .fit)
-                                        .frame(width: geometry.size.width * 0.9)
-                                        .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                        .cornerRadius(13, corners: [.bottomRight, .topRight])
+                        ScrollView {
+                                VStack(spacing: 8) {
+                                    ForEach(currentlyReadingBooks) { book in
+                                        NavigationLink {
+                                            DetailView(book: book)
+                                        } label: {
+                                            VStack(alignment: .leading) {
+                                                HStack {
+                                                    WebImage(url: URL(string: book.imageLink))
+                                                        .resizable()
+                                                        .frame(width: 104, height: 157, alignment: .center)
+                                                        .aspectRatio(contentMode: .fill)
+                                                        .cornerRadius(3, corners: [.topLeft, .bottomLeft])
+                                                        .cornerRadius(10, corners: [.bottomRight, .topRight])
+                                                        .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+                                                    
+                                                    VStack(alignment: .leading, spacing: 8) {
+                                                        Text(book.title)
+                                                            .titleThree()
+                                                            .lineLimit(1)
+                                                            .multilineTextAlignment(.leading)
+                                                        Text(book.description)
+                                                            .body()
+                                                            .lineLimit(2)
+                                                            .multilineTextAlignment(.leading)
+                                                        HStack {
+                                                            Text(book.authors.formatted(.list(type: .and)))
+                                                                .caption2()
+                                                                .italic()
+                                                            Spacer()
+                                                            Text("\(book.pageCount) pages")
+                                                                .caption2()
+                                                                .italic()
+                                                        }
+                                                        .opacity(0.8)
+                                                        .lineLimit(1)
+                                                    }
+                                                }
+                                                Divider()
+                                                    .foregroundColor(.white)
+                                                    .opacity(0.5)
+                                            }
+                                        }
+                                    }
                                 }
-                                .buttonStyle(FlatLinkStyle())
-                                .aspectRatio(0.66, contentMode: .fit)
-                                .frame(width: geometry.size.width * 0.9)
+                                .padding()
                             }
-                            .options(StackTransformViewOptions.layout(.perspective))
-
-                            VStack(alignment: .center, spacing: 8) {
-                                Text(currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.title ?? "")
-                                    .foregroundColor(.white)
-                                    .titleThree()
-                                
-                                Text((currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.authors ?? []).formatted(.list(type: .and)))
-                                    .caption()
-                                    .foregroundColor(.white)
-                                
-                                // TODO: Progress View
-                            }
-                        }
-                        .padding()
+//                        VStack(alignment: .center, spacing: 24) {
+//                            StackPageView(currentlyReadingBooks, selection: $selectedBookID) { book in
+//                                NavigationLink {
+//                                    DetailView(book: book)
+//                                } label: {
+//                                    WebImage(url: URL(string: book.imageLink))
+//                                        .resizable()
+//                                        .aspectRatio(0.66, contentMode: .fit)
+//                                        .frame(width: geometry.size.width * 0.9)
+//                                        .cornerRadius(5, corners: [.topLeft, .bottomLeft])
+//                                        .cornerRadius(13, corners: [.bottomRight, .topRight])
+//                                }
+//                                .buttonStyle(FlatLinkStyle())
+//                                .aspectRatio(0.66, contentMode: .fit)
+//                                .frame(width: geometry.size.width * 0.9)
+//                            }
+//                            .options(StackTransformViewOptions.layout(.perspective))
+//
+//                            VStack(alignment: .center, spacing: 8) {
+//                                Text(currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.title ?? "")
+//                                    .foregroundColor(.white)
+//                                    .titleThree()
+//
+//                                Text((currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.authors ?? []).formatted(.list(type: .and)))
+//                                    .caption()
+//                                    .foregroundColor(.white)
+//
+//                                // TODO: Progress View
+//                            }
+//                        }
+//                        .padding()
                     }
                 }
             }
