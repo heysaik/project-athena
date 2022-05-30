@@ -8,7 +8,6 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
-import CollectionViewPagingLayout
 import SDWebImageSwiftUI
 
 struct ProfileView: View {
@@ -19,7 +18,7 @@ struct ProfileView: View {
     @State private var selectedBookID: Book.ID? = nil
     @State private var showSettingsView = false
     
-    private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)] // for already read and wishlist
+    private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)]
     private let segments = ["Already Read", "Wishlist"]
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
@@ -35,6 +34,7 @@ struct ProfileView: View {
                             Text(email)
                                 .titleTwo()
                                 .foregroundColor(.white)
+                                .padding(.horizontal)
                         }
                         ScrollView {
                             Picker("", selection: $selectedSegment) {
@@ -43,6 +43,7 @@ struct ProfileView: View {
                                 }
                             }
                             .pickerStyle(.segmented)
+                            .padding(.horizontal)
                           
                             if selectedSegment == "Wishlist" {
                                 // If the user is clicked on "wishlist"
@@ -63,15 +64,10 @@ struct ProfileView: View {
                                             NavigationLink {
                                                 DetailView(book: book)
                                             } label: {
-                                                WebImage(url: URL(string: book.imageLink))
-                                                    .resizable()
-                                                    .aspectRatio(0.66, contentMode: .fit)
-                                                    .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
-                                                    .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                                    .cornerRadius(13, corners: [.bottomRight, .topRight])
+                                                BookCoverView(imageURLString: book.imageLink, size: geometry.size.width / 2)
                                             }
                                             .aspectRatio(0.66, contentMode: .fit)
-                                            .frame(width: geometry.size.width * 0.4)
+                                            .frame(width: geometry.size.width / 2)
                                         }
                                     }
                                 }
@@ -94,28 +90,21 @@ struct ProfileView: View {
                                             NavigationLink {
                                                 DetailView(book: book)
                                             } label: {
-                                                WebImage(url: URL(string: book.imageLink))
-                                                    .resizable()
-                                                    .aspectRatio(0.66, contentMode: .fit)
-                                                    .frame(width: UIScreen.main.bounds.width/2, height: UIScreen.main.bounds.width/2)
-                                                    .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-                                                    .cornerRadius(13, corners: [.bottomRight, .topRight])
+                                                BookCoverView(imageURLString: book.imageLink, size: geometry.size.width / 2)
                                             }
                                             .aspectRatio(0.66, contentMode: .fit)
-                                            .frame(width: geometry.size.width * 0.4)
+                                            .frame(width: geometry.size.width / 2)
                                         }
                                     }
                                 }
                             }
                         }
                     }
-                    .padding(.horizontal)
                 }
                 .navigationTitle("Profile")
                 .tint(.white)
                 .onAppear {
                     if let user = auth.currentUser {
-                        
                         // Load Wishlist
                         firestore
                             .collection("wishlist")
@@ -167,33 +156,6 @@ struct ProfileView: View {
                                     self.alreadyReadBooks.sort(by: {$0.title < $1.title})
                                 }
                             }
-                        
-                        
-//                        firestore
-//                            .collection("users")
-//                            .document(user.uid)
-//                            .addSnapshotListener { docSnapshot, error in
-//                                guard error == nil else {
-//                                    print(error!.localizedDescription)
-//                                    return
-//                                }
-//                                
-//                                if let snapshot = docSnapshot {
-//                                    do {
-//                                        let userData = try snapshot.data(as: User.self)
-//                                        self.wishlistedBooks = userData.wishlist.sorted(by: {$0.title < $1.title})
-//                                        if self.wishlistedBooks.count > 0 {
-//                                            self.selectedBookID = wishlistedBooks.first!.id
-//                                        }
-//                                        self.alreadyReadBooks = userData.alreadyRead.sorted(by: {$0.title < $1.title})
-//                                        if self.alreadyReadBooks.count > 0 {
-//                                            self.selectedBookID = alreadyReadBooks.first!.id
-//                                        }
-//                                    } catch let convertError {
-//                                        print("Conversion Error: \(convertError.localizedDescription)")
-//                                    }
-//                                }
-//                            }
                     }
                 }
                 .toolbar {

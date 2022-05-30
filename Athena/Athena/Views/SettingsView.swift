@@ -44,10 +44,11 @@ struct SettingsView: View {
                 LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                     .edgesIgnoringSafeArea(.all)
                 Form {
-                    Section(header: Label("About You", systemImage: "list.bullet.rectangle.fill")) {
+                    Section(header: Label("About You", systemImage: "list.bullet.rectangle.fill").foregroundColor(.white).opacity(0.5)) {
                         HStack {
                             NavigationLink {
                                 // Show Insights
+                                InsightsView()
                             } label: {
                                 Label("Insights", systemImage: "chart.xyaxis.line")
                                     .font(.custom("FoundersGrotesk-Regular", size: 17))
@@ -64,9 +65,10 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    .listItemTint(.white)
                     .listRowBackground(Color.white.opacity(0.2))
                     
-                    Section(header: Label("Privacy and Security", systemImage: "lock.fill")) {
+                    Section(header: Label("Privacy and Security", systemImage: "lock.fill").foregroundColor(.white).opacity(0.5)) {
                         HStack {
                             Button {
                                 // Edit Name
@@ -120,9 +122,10 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    .listItemTint(.white)
                     .listRowBackground(Color.white.opacity(0.2))
-                    
-                    Section(header: Label("More Actions", systemImage: "ellipsis")) {
+
+                    Section(header: Label("More Actions", systemImage: "ellipsis").foregroundColor(.white).opacity(0.5)) {
                         HStack {
                             Button {
                                 // Clear Cache
@@ -286,7 +289,9 @@ struct SettingsView: View {
                             Text("This will delete all of your notes, books in your library, and data off of our servers. This action is irreversible.")
                         })
                     }
+                    .listItemTint(.white)
                     .listRowBackground(Color.white.opacity(0.2))
+
                 }
                 .customAlert(manager: nameAlertManager, content: {
                     VStack {

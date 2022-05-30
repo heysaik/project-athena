@@ -9,16 +9,18 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 import SDWebImageSwiftUI
-import CollectionViewPagingLayout
+
+enum SortOptions {
+    case title, author, progress
+}
 
 struct LibraryView: View {
     @State private var currentlyReadingBooks = [Book]()
-    @State private var selectedBookID: Book.ID? = nil
-    @State private var selection = "Title"
-    @State private var options =  [ "author" , "title"]
+    @State private var sortOption: SortOptions = .title
+    
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
-   
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -30,28 +32,11 @@ struct LibraryView: View {
                 .edgesIgnoringSafeArea(.all)
                 
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Text("Currently Reading")
-                            .foregroundColor(.white)
-                            .titleTwo()
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                    VStack {
-                                        Picker("Select a paint color", selection: $selection) {
-                                            Button(action: {
-                                                self.currentlyReadingBooks.sort(by: {$0.title < $1.title})
-                                            }, label: {
-                                                Text("Sort by Title")
-                                            })
-                                            Button(action: {
-                                                self.currentlyReadingBooks.sort(by: {$0.authors[0] < $1.authors[0]})
-                                            }, label: {
-                                                Text("Sort by Author")
-                                            })
-                                        }
-                    }
-                    .pickerStyle(.menu)
+                    Text("Currently Reading")
+                        .foregroundColor(.white)
+                        .titleTwo()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
                     if currentlyReadingBooks.count == 0 {
                         Spacer()
                         VStack(spacing: 16) {
@@ -65,91 +50,65 @@ struct LibraryView: View {
                         Spacer()
                     } else {
                         ScrollView {
-                                VStack(spacing: 8) {
-                                    ForEach(currentlyReadingBooks) { book in
-                                        NavigationLink {
-                                            DetailView(book: book)
-                                        } label: {
-                                            VStack(alignment: .leading) {
+                            VStack(spacing: 16) {
+                                ForEach(sortOption == .title ? (currentlyReadingBooks.sorted(by: {$0.title < $1.title})) : (sortOption == .author ? (currentlyReadingBooks.sorted(by: {$0.authors[0] < $1.authors[0]})) : (currentlyReadingBooks.sorted(by: {(Double($0.pagesRead ?? 0)/Double($0.pageCount) * 100) > (Double($1.pagesRead ?? 0)/Double($1.pageCount) * 100)})))) { book in
+                                    NavigationLink {
+                                        DetailView(book: book)
+                                    } label: {
+                                        HStack(spacing: 16) {
+                                            BookCoverView(imageURLString: book.imageLink)
+                                            VStack(alignment: .leading, spacing: 8) {
+                                                Text(book.title)
+                                                    .titleThree()
+                                                    .lineLimit(1)
+                                                    .multilineTextAlignment(.leading)
+                                                Text(book.authors.formatted(.list(type: .and)))
+                                                    .body()
+                                                    .italic()
+                                                    .lineLimit(2)
+                                                    .multilineTextAlignment(.leading)
+                                                    .opacity(0.8)
                                                 HStack {
-                                                    WebImage(url: URL(string: book.imageLink))
-                                                        .resizable()
-                                                        .frame(width: 104, height: 157, alignment: .center)
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .cornerRadius(3, corners: [.topLeft, .bottomLeft])
-                                                        .cornerRadius(10, corners: [.bottomRight, .topRight])
-                                                        .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                                                    
-                                                    VStack(alignment: .leading, spacing: 8) {
-                                                        Text(book.title)
-                                                            .titleThree()
-                                                            .lineLimit(1)
-                                                            .multilineTextAlignment(.leading)
-                                                        Text(book.description)
-                                                            .body()
-                                                            .lineLimit(2)
-                                                            .multilineTextAlignment(.leading)
-                                                        HStack {
-                                                            Text(book.authors.formatted(.list(type: .and)))
-                                                                .caption2()
-                                                                .italic()
-                                                            Spacer()
-                                                            Text("\(book.pageCount) pages")
-                                                                .caption2()
-                                                                .italic()
-                                                        }
-                                                        .opacity(0.8)
-                                                        .lineLimit(1)
-                                                    }
+                                                    ProgressCircleView(current: .constant(book.pagesRead), total: book.pageCount, showText: false, size: 20)
+                                                    Text("\(Double(book.pagesRead ?? 0)/Double(book.pageCount) * 100, specifier: "%.0f")% completed")
+                                                        .caption()
+                                                        .foregroundColor(.white)
                                                 }
-                                                Divider()
-                                                    .foregroundColor(.white)
-                                                    .opacity(0.5)
                                             }
                                         }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
                                     }
                                 }
-                                .padding()
                             }
-        
-//                        VStack(alignment: .center, spacing: 24) {
-//                            StackPageView(currentlyReadingBooks, selection: $selectedBookID) { book in
-//                                NavigationLink {
-//                                    DetailView(book: book)
-//                                } label: {
-//                                    WebImage(url: URL(string: book.imageLink))
-//                                        .resizable()
-//                                        .aspectRatio(0.66, contentMode: .fit)
-//                                        .frame(width: geometry.size.width * 0.9)
-//                                        .cornerRadius(5, corners: [.topLeft, .bottomLeft])
-//                                        .cornerRadius(13, corners: [.bottomRight, .topRight])
-//                                }
-//                                .buttonStyle(FlatLinkStyle())
-//                                .aspectRatio(0.66, contentMode: .fit)
-//                                .frame(width: geometry.size.width * 0.9)
-//                            }
-//                            .options(StackTransformViewOptions.layout(.perspective))
-//
-//                            VStack(alignment: .center, spacing: 8) {
-//                                Text(currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.title ?? "")
-//                                    .foregroundColor(.white)
-//                                    .titleThree()
-//
-//                                Text((currentlyReadingBooks.first { $0.id == selectedBookID ?? "" }?.authors ?? []).formatted(.list(type: .and)))
-//                                    .caption()
-//                                    .foregroundColor(.white)
-//
-//                                // TODO: Progress View
-//                            }
-//                        }
-//                        .padding()
+                            .padding()
+                        }
                     }
                 }
             }
-            .navigationTitle(("Library"))
+            .navigationTitle("Library")
+            .toolbar {
+                ToolbarItem(placement: .primaryAction, content: {
+                    Menu(
+                        content: {
+                            Picker("", selection: $sortOption) {
+                                Text("Sort by Title")
+                                    .tag(SortOptions.title)
+                                Text("Sort by Author")
+                                    .tag(SortOptions.author)
+                                Text("Sort by Progress")
+                                    .tag(SortOptions.progress)
+                            }
+                        },
+                        label: {
+                            Image(systemName: "arrow.up.arrow.down")
+                        }
+                    )
+                })
+            }
             .tint(.white)
             .onAppear {
                 if let user = auth.currentUser {
+                    // Get books in currently reading
                     firestore
                         .collection("currentlyReading")
                         .whereField("readerID", isEqualTo: user.uid)
@@ -170,15 +129,9 @@ struct LibraryView: View {
                                         print("Conversion Error: \(convertError.localizedDescription)")
                                     }
                                 }
-                                
-                                self.currentlyReadingBooks.sort(by: {$0.title < $1.title})
-                                if self.currentlyReadingBooks.count > 0 {
-                                    self.selectedBookID = currentlyReadingBooks.first!.id
-                                }
                             }
                         }
                 }
-            
             }
         }
         

@@ -23,6 +23,7 @@ struct DetailView: View {
     @State private var showInvalidProgressAlert = false
     
     private let booksManager = GoogleBooksManager.shared
+    private let gen = UINotificationFeedbackGenerator()
     
     @State private var book: Book = Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")
     
@@ -38,14 +39,8 @@ struct DetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     HStack(alignment: .top) {
-                        WebImage(url: URL(string: book.imageLink))
-                            .resizable()
-                            .frame(width: 104, height: 157, alignment: .center)
-                            .aspectRatio(contentMode: .fill)
-                            .cornerRadius(6, corners: [.topLeft, .bottomLeft])
-                            .cornerRadius(6, corners: [.bottomRight, .topRight])
-                            .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                        
+                        BookCoverView(imageURLString: book.imageLink)
+
                         VStack(alignment: .leading, spacing: 8) {
                             Text(book.title)
                                 .titleThree()
@@ -59,13 +54,12 @@ struct DetailView: View {
                         }
                     }
                     
+                    // Buttons
                     if inLibrary {
-                        // Buttons
+                        // User is currently reading book
                         HStack {
+                            // Mark Book as Completed
                             Button {
-                                // Mark as Completed
-                                let gen = UINotificationFeedbackGenerator()
-                                
                                 Task {
                                     if var convertedBook = book.convertToDict() {
                                         convertedBook["readerID"] = Auth.auth().currentUser!.uid
@@ -101,8 +95,9 @@ struct DetailView: View {
                                     )
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
                             }
-                            Spacer()
+                            .frame(maxWidth: .infinity, alignment: .center)
                             
+                            // Update Progress of Book
                             Button {
                                 self.alertManager.show()
                             } label: {
@@ -117,6 +112,7 @@ struct DetailView: View {
                                     )
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
                             }
+                            .frame(maxWidth: .infinity, alignment: .center)
                         }
                         
                         // Progress Circle
@@ -127,11 +123,24 @@ struct DetailView: View {
                         }
                     } else if inRead {
                         HStack {
-                            Spacer()
+                            // Add/Edit Review
+                            NavigationLink {
+                                TextEditView(note: .constant(Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())), book: $book, contentType: .review, actionType: (book.userReview == nil || book.userReview == "") ? .create : .update)
+                            } label: {
+                                Label(book.userReview == nil || book.userReview == "" ? "Add your Review" : "Edit your Review", systemImage: "pencil.circle.fill")
+                                    .font(.custom("FoundersGrotesk-Medium", size: 15))
+                                    .foregroundColor(.white)
+                                    .padding(8)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 22)
+                                            .foregroundColor(.white.opacity(0.25))
+                                            .frame(height: 44)
+                                    )
+                                    .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                            }
+                            // Remove from Read
                             Button {
-                                let gen = UINotificationFeedbackGenerator()
-
-                                // Remove from Read
                                 Task {
                                     try await Firestore.firestore()
                                         .collection("alreadyRead")
@@ -150,8 +159,70 @@ struct DetailView: View {
                                             .frame(height: 44)
                                     )
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                                    .frame(maxWidth: .infinity, alignment: .center)
                             }
-                            Spacer()
+                        }
+                        
+                        // User Review about the Book
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Your Review")
+                                .titleFour()
+                                .foregroundColor(.white)
+                            if book.userReview == nil || book.userReview == "" {
+                                Text("Tap on the button above to add your thoughts about the book")
+                                    .body()
+                                    .multilineTextAlignment(.leading)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                            } else {
+                                NavigationLink {
+                                    ZStack {
+                                        LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
+                                            .edgesIgnoringSafeArea(.all)
+                                        
+                                        ScrollView {
+                                            Text(book.userReview!)
+                                                .body()
+                                                .multilineTextAlignment(.leading)
+                                                .foregroundColor(.white)
+                                        }
+                                        .navigationBarTitle("Your Review")
+                                    }
+                                    .toolbar {
+                                        ToolbarItem(placement: .navigationBarTrailing, content: {
+                                            Button {
+                                                Task {
+                                                    let gen = UINotificationFeedbackGenerator()
+                                                    do {
+                                                        try await Firestore.firestore()
+                                                            .collection("alreadyRead")
+                                                            .document(book.docID)
+                                                            .updateData(["userReview": ""])
+                                                        gen.notificationOccurred(.success)
+                                                    } catch let addError {
+                                                        print(addError.localizedDescription)
+                                                        gen.notificationOccurred(.error)
+                                                    }
+                                                }
+                                            } label: {
+                                                Image(systemName: "trash")
+                                            }
+                                        })
+                                    }
+                                } label: {
+                                    Text(book.userReview!)
+                                        .body()
+                                        .multilineTextAlignment(.leading)
+                                        .foregroundColor(.white)
+                                        .lineLimit(10)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding()
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 20)
+                                                .foregroundColor(.black.opacity(0.25))
+                                        )
+                                }
+                            }
                         }
                     } else if inWishlist {
                         HStack {
@@ -178,8 +249,6 @@ struct DetailView: View {
                         HStack {
                             Button {
                                 // Add to Wishlist
-                                let gen = UINotificationFeedbackGenerator()
-                                
                                 Task {
                                     if var convertedBook = book.convertToDict() {
                                         convertedBook["readerID"] = Auth.auth().currentUser!.uid
@@ -208,8 +277,9 @@ struct DetailView: View {
                                             .frame(height: 44)
                                     )
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                                    .frame(maxWidth: .infinity, alignment: .center)
                             }
-                            Spacer()
+
                             Button {
                                 // Add to Library
                                 self.showLibrarySheet.toggle()
@@ -224,42 +294,48 @@ struct DetailView: View {
                                             .frame(height: 44)
                                     )
                                     .shadow(color: .black.opacity(0.33), radius: 10, x: 0, y: 5)
+                                    .frame(maxWidth: .infinity, alignment: .center)
                             }
                         }
                     }
                     
-                    // Book Description
-                    NavigationLink {
-                        ZStack {
-                            LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
-                                .edgesIgnoringSafeArea(.all)
-                            
-                            ScrollView {
-                                Text(book.description)
-                                    .body()
-                                    .multilineTextAlignment(.leading)
-                                    .padding()
-                                    .foregroundColor(.white)
-                            }
-                            .navigationBarTitle("About the Book")
-                        }
-                    } label: {
-                        Text(book.description)
-                            .body()
-                            .multilineTextAlignment(.leading)
+                    // About the Book
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("About")
+                            .titleFour()
                             .foregroundColor(.white)
-                            .lineLimit(10)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundColor(.black.opacity(0.25))
-                            )
+                        NavigationLink {
+                            ZStack {
+                                LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
+                                    .edgesIgnoringSafeArea(.all)
+                                
+                                ScrollView {
+                                    Text(book.description)
+                                        .body()
+                                        .multilineTextAlignment(.leading)
+                                        .padding()
+                                        .foregroundColor(.white)
+                                }
+                                .navigationBarTitle("About \(book.title)")
+                            }
+                        } label: {
+                            Text(book.description)
+                                .body()
+                                .multilineTextAlignment(.leading)
+                                .foregroundColor(.white)
+                                .lineLimit(10)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .foregroundColor(.black.opacity(0.25))
+                                )
+                        }
                     }
                     
                     if recommendedBooks.count > 0 {
                         // Recommendations
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("More from \(book.authors.first!)")
                                 .titleFour()
                                 .foregroundColor(.white)
@@ -270,18 +346,13 @@ struct DetailView: View {
                                             DetailView(book: book)
                                         }, label: {
                                             VStack(alignment: .leading, spacing: 8) {
-                                                WebImage(url: URL(string: book.imageLink))
-                                                    .resizable()
-                                                    .frame(width: 104, height: 157, alignment: .center)
-                                                    .aspectRatio(contentMode: .fill)
-                                                    .cornerRadius(3, corners: [.topLeft, .bottomLeft])
-                                                    .cornerRadius(10, corners: [.bottomRight, .topRight])
-                                                    .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
+                                                BookCoverView(imageURLString: book.imageLink)
                                                 Text(book.title)
                                                     .headline()
+                                                    .lineLimit(5)
                                                     .foregroundColor(.white)
                                                     .multilineTextAlignment(.leading)
-                                                    .frame(maxHeight: .infinity)
+                                                    .frame(maxHeight: .infinity, alignment: .top)
                                             }
                                             .frame(width: 104)
                                             .frame(maxHeight: .infinity)
@@ -353,8 +424,6 @@ struct DetailView: View {
             if inWishlist {
                 // Remove from Wishlist
                 Button(role: .destructive) {
-                    let gen = UINotificationFeedbackGenerator()
-                    
                     Task {
                         try await Firestore.firestore()
                             .collection("wishlist")
@@ -371,8 +440,6 @@ struct DetailView: View {
             if !inLibrary || inWishlist {
                 // Add to Library
                 Button {
-                    let gen = UINotificationFeedbackGenerator()
-                    
                     Task {
                         if var convertedBook = book.convertToDict() {
                             convertedBook["readerID"] = Auth.auth().currentUser!.uid
@@ -402,8 +469,6 @@ struct DetailView: View {
             
             // Mark as Read
             Button {
-                let gen = UINotificationFeedbackGenerator()
-                
                 Task {
                     book.pagesRead = book.pageCount
                     if var convertedBook = book.convertToDict() {

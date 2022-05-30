@@ -24,19 +24,51 @@ struct NotesDetailView: View {
             LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
                 .edgesIgnoringSafeArea(.all)
             
-            // TODO: ADD BOOK VIEW HERE MAKE IT LOOK SIMILAR TO SEARCH RESULTS BOOK VIEW
-            ScrollView {
-                Text(note.note)
-                    .multilineTextAlignment(.leading)
+            VStack(alignment: .leading, spacing: 8) {
+                ScrollView {
+                    Text(note.note)
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                Spacer()
+                if note.book != nil {
+                    HStack(spacing: 16) {
+                        BookCoverView(imageURLString: note.book!.imageLink, size: 100)
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(note.book!.title)
+                                .titleThree()
+                                .lineLimit(1)
+                                .multilineTextAlignment(.leading)
+                            Text(note.book!.authors.formatted(.list(type: .and)))
+                                .body()
+                                .italic()
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
+                                .opacity(0.8)
+                            Text(note.book!.description)
+                                .caption()
+                                .lineLimit(3)
+                                .multilineTextAlignment(.leading)
+                        }
+                        .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
-                    .foregroundColor(.white)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundColor(.black.opacity(0.25))
+                    )
+                }
             }
+            .padding()
         }
         .navigationTitle(note.title)
         .toolbar {
             ToolbarItem(placement: .primaryAction, content: {
                 NavigationLink {
-                    NotesEditView(note: $note, creatingNewNote: false)
+                    TextEditView(note: $note, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")),contentType: .note, actionType: .update)
                 } label: {
                     Image(systemName: "pencil")
                 }

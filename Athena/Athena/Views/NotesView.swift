@@ -61,7 +61,7 @@ struct NotesView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction, content: {
                     NavigationLink {
-                        NotesEditView(note: $newNote, creatingNewNote: true)
+                        TextEditView(note: $newNote, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")), contentType: .note, actionType: .create)
                     } label: {
                         Image(systemName: "plus")
                     }

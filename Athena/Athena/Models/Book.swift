@@ -8,7 +8,7 @@
 import Foundation
 
 // This structure is used to save 
-struct Book: Identifiable, Convertable, Equatable {
+struct Book: Identifiable, Convertable, Equatable, Hashable {
     var id: String
     var docID: String
     var title: String
@@ -23,6 +23,7 @@ struct Book: Identifiable, Convertable, Equatable {
     var imageLink: String
     var googleBooksRating: Float?
     var pagesRead: Int?
+    var userReview: String?
 }
 
 protocol Convertable: Codable {}

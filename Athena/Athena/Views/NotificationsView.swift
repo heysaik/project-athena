@@ -11,12 +11,10 @@ struct NotificationsView: View {
     @AppStorage("read_remind") var readReminder: Bool = true
     @AppStorage("remind_time") var reminderDate: Data = Data()
     @AppStorage("team_notif") var teamAthena: Bool = true
-    @AppStorage("notif_days") var daysEnabled: Data = Data()
 
     @State private var selectedTime = Date()
     @Environment(\.presentationMode) var presentationMode
     
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     
     // Used to show the gradient
     init() {
@@ -30,64 +28,24 @@ struct NotificationsView: View {
             Form {
                 Section {
                     HStack {
-                        Text("Reminder to Read")
+                        Text("Daily Reading Reminder")
                         Spacer()
                         Toggle("", isOn: $readReminder)
+                            .tint(Color(uiColor: UIColor(red: 0, green: 68/255, blue: 215/255, alpha: 1)))
                     }
                     .onChange(of: readReminder) { newValue in
                         if newValue == false {
                             teamAthena = false
                         }
                     }
-                    
-                    HStack {
-                        Text("Team Athena Updates Enabled")
-                        Spacer()
-                        Toggle("", isOn: $teamAthena)
-                    }
-                    .onChange(of: teamAthena) { newValue in
-                        if newValue == false {
-                            // Remove observer
-                        } else {
-                            // Add observer
+                    DatePicker("Time", selection: $selectedTime, displayedComponents: [.hourAndMinute])
+                        .onChange(of: selectedTime) { newTime in
+                            reminderDate = Storage.archiveDate(object: newTime)
                         }
-                    }
+                        .tint(.white)
+                        .foregroundColor(.white)
                 }
                 .listRowBackground(Color.white.opacity(0.2))
-                
-                Section {
-                    VStack {
-                        HStack {
-                            ForEach(days, id: \.self) { day in
-                                ZStack {
-                                    Circle()
-                                        .frame(width: 40, height: 40, alignment: .center)
-                                        .foregroundColor(Storage.loadStringArray(data: daysEnabled).contains(day) ? .white : .blue)
-                                    Text("\(String(day.prefix(2)))")
-                                        .foregroundColor(Storage.loadStringArray(data: daysEnabled).contains(day) ? .blue : .white)
-                                }
-                                .onTapGesture {
-                                    // Toggle
-                                    var dayArray = Storage.loadStringArray(data: daysEnabled)
-                                    if dayArray.contains(day) {
-                                        // Remove from array
-                                        dayArray.removeAll(where: {$0 == day})
-                                        daysEnabled = Storage.archiveStringArray(object: dayArray)
-                                    } else {
-                                        dayArray.append(day)
-                                        daysEnabled = Storage.archiveStringArray(object: dayArray)
-                                    }
-                                }
-                            }
-                        }
-                        DatePicker("Time", selection: $selectedTime, displayedComponents: [.hourAndMinute])
-                            .onChange(of: selectedTime) { newTime in
-                                reminderDate = Storage.archiveDate(object: newTime)
-                            }
-                    }
-                }
-                .listRowBackground(Color.white.opacity(0.2))
-                .opacity(readReminder ? 1 : 0.5)
             }
         }
         .navigationTitle("Notifications")
@@ -104,39 +62,20 @@ struct NotificationsView: View {
                         let content = UNMutableNotificationContent()
                         content.title = "Reading Reminder"
                         content.body = "Grab a book and get cozy! Your reading session starts now! Let's knock some books out of your library!"
+                        content.badge = NSNumber(value: 1)
+                        content.sound = .default
                         
                         var dateComponents = DateComponents()
-                        dateComponents.calendar = Calendar.current
-
-                        let dayArray = Storage.loadStringArray(data: daysEnabled)
-                        if dayArray.contains("Sunday") {
-                            dateComponents.weekday = 1
-                        } else if dayArray.contains("Monday") {
-                            dateComponents.weekday = 2
-                        } else if dayArray.contains("Tuesday") {
-                            dateComponents.weekday = 3
-                        } else if dayArray.contains("Wednesday") {
-                            dateComponents.weekday = 4
-                        } else if dayArray.contains("Thursday") {
-                            dateComponents.weekday = 5
-                        } else if dayArray.contains("Friday") {
-                            dateComponents.weekday = 6
-                        } else if dayArray.contains("Saturday") {
-                            dateComponents.weekday = 7
-                        }
-                                                
                         dateComponents.hour = Calendar.current.component(.hour, from: selectedTime)
                         dateComponents.minute = Calendar.current.component(.minute, from: selectedTime)
                         
                         // Create the trigger as a repeating event.
                         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-                        
                         let request = UNNotificationRequest(identifier: "read-reminder", content: content, trigger: trigger)
 
                         // Schedule the request with the system.
                         UNUserNotificationCenter.current().add(request)
                         self.presentationMode.wrappedValue.dismiss()
-                        
                     }
                 } label: {
                     Text("Save")
@@ -144,10 +83,12 @@ struct NotificationsView: View {
             })
         }
         .onAppear {
-            UNUserNotificationCenter.current().requestAuthorization { _, _ in }
-            
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in
+                
+            }
             selectedTime = Storage.loadDate(data: reminderDate)
         }
+        .foregroundColor(.white)
     }
 }
 

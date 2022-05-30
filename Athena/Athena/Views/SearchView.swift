@@ -54,14 +54,8 @@ struct SearchView: View {
                                         } label: {
                                             VStack(alignment: .leading) {
                                                 HStack {
-                                                    WebImage(url: URL(string: book.imageLink))
-                                                        .resizable()
-                                                        .frame(width: 104, height: 157, alignment: .center)
-                                                        .aspectRatio(contentMode: .fill)
-                                                        .cornerRadius(3, corners: [.topLeft, .bottomLeft])
-                                                        .cornerRadius(10, corners: [.bottomRight, .topRight])
-                                                        .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
-                                                    
+                                                    BookCoverView(imageURLString: book.imageLink)
+
                                                     VStack(alignment: .leading, spacing: 8) {
                                                         Text(book.title)
                                                             .titleThree()
