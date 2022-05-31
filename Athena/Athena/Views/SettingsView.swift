@@ -12,7 +12,6 @@ import FirebaseFirestore
 import AlertKit
 
 struct SettingsView: View {
-    
     @Environment(\.presentationMode) var presentationMode
     @State private var showLogoutAlert = false
     @State private var showDeleteAlert = false
@@ -76,7 +75,6 @@ struct SettingsView: View {
                             } label: {
                                 Label("Edit Name", systemImage: "person.fill")
                                     .font(.custom("FoundersGrotesk-Regular", size: 17))
-                                
                             }
                         }
                         HStack {

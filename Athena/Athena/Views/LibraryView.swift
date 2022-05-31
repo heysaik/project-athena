@@ -10,14 +10,10 @@ import FirebaseAuth
 import FirebaseFirestore
 import SDWebImageSwiftUI
 
-enum SortOptions {
-    case title, author, progress
-}
-
 struct LibraryView: View {
-    @State private var currentlyReadingBooks = [Book]()
     @State private var sortOption: SortOptions = .title
-    
+    @EnvironmentObject var rootViewModel: RootViewModel
+
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
     
@@ -37,7 +33,7 @@ struct LibraryView: View {
                         .titleTwo()
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal)
-                    if currentlyReadingBooks.count == 0 {
+                    if rootViewModel.currentlyReadingBooks.count == 0 {
                         Spacer()
                         VStack(spacing: 16) {
                             Image(systemName: "books.vertical")
@@ -51,16 +47,16 @@ struct LibraryView: View {
                     } else {
                         ScrollView {
                             VStack(spacing: 16) {
-                                ForEach(sortOption == .title ? (currentlyReadingBooks.sorted(by: {$0.title < $1.title})) : (sortOption == .author ? (currentlyReadingBooks.sorted(by: {$0.authors[0] < $1.authors[0]})) : (currentlyReadingBooks.sorted(by: {(Double($0.pagesRead ?? 0)/Double($0.pageCount) * 100) > (Double($1.pagesRead ?? 0)/Double($1.pageCount) * 100)})))) { book in
+                                ForEach(rootViewModel.getCurrentlyReadingBooks(sort: sortOption)) { book in
                                     NavigationLink {
                                         DetailView(book: book)
+                                            .environmentObject(rootViewModel)
                                     } label: {
                                         HStack(spacing: 16) {
                                             BookCoverView(imageURLString: book.imageLink)
                                             VStack(alignment: .leading, spacing: 8) {
                                                 Text(book.title)
                                                     .titleThree()
-                                                    .lineLimit(1)
                                                     .multilineTextAlignment(.leading)
                                                 Text(book.authors.formatted(.list(type: .and)))
                                                     .body()
@@ -72,6 +68,7 @@ struct LibraryView: View {
                                                     ProgressCircleView(current: .constant(book.pagesRead), total: book.pageCount, showText: false, size: 20)
                                                     Text("\(Double(book.pagesRead ?? 0)/Double(book.pageCount) * 100, specifier: "%.0f")% completed")
                                                         .caption()
+                                                        .padding(.top, 2)
                                                         .foregroundColor(.white)
                                                 }
                                             }
@@ -106,33 +103,6 @@ struct LibraryView: View {
                 })
             }
             .tint(.white)
-            .onAppear {
-                if let user = auth.currentUser {
-                    // Get books in currently reading
-                    firestore
-                        .collection("currentlyReading")
-                        .whereField("readerID", isEqualTo: user.uid)
-                        .addSnapshotListener { querySnapshot, error in
-                            guard error == nil else {
-                                print(error!.localizedDescription)
-                                return
-                            }
-                            
-                            if let snapshot = querySnapshot {
-                                let docs = snapshot.documents
-                                self.currentlyReadingBooks = []
-                                for doc in docs {
-                                    do {
-                                        let book = try doc.data(as: Book.self)
-                                        self.currentlyReadingBooks.append(book)
-                                    } catch let convertError {
-                                        print("Conversion Error: \(convertError.localizedDescription)")
-                                    }
-                                }
-                            }
-                        }
-                }
-            }
         }
         
     }

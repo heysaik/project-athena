@@ -12,11 +12,10 @@ import FirebaseAuth
 import FirebaseFirestore
 
 struct SearchView: View {
-    @State private var searchTerm = ""
+    @EnvironmentObject var rootViewModel: RootViewModel
+    @StateObject var viewModel = SearchViewModel()
+
     private let booksManager = GoogleBooksManager.shared
-    @State private var bookResults = [Book]()
-    @State private var searchHistory = [SearchTerm]()
-    @State private var clearSearchHistory = false
     
     var body: some View {
         NavigationView {
@@ -25,14 +24,14 @@ struct SearchView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    if searchTerm.isEmpty {
+                    if viewModel.searchTerm.isEmpty {
                         VStack(spacing: 16) {
-                            Text(searchHistory.count != 0 ? "Search History" : "Start searching for books")
+                            Text(rootViewModel.searchHistory.count != 0 ? "Search History" : "Start searching for books")
                                 .headline()
                                 .foregroundColor(.white)
-                            ForEach(searchHistory, id: \.self) { term in
+                            ForEach(rootViewModel.searchHistory, id: \.self) { term in
                                 Button {
-                                    searchTerm = term.id
+                                    viewModel.searchTerm = term.id
                                 } label: {
                                     Text(term.id)
                                         .body()
@@ -43,14 +42,15 @@ struct SearchView: View {
                         }
                     } else {
                         ScrollView {
-                            if bookResults.count == 0 {
+                            if viewModel.bookResults.count == 0 {
                                 Text("No results")
                                     .foregroundColor(.white)
                             } else {
                                 VStack(spacing: 8) {
-                                    ForEach(bookResults) { book in
+                                    ForEach(viewModel.bookResults) { book in
                                         NavigationLink {
                                             DetailView(book: book)
+                                                .environmentObject(rootViewModel)
                                         } label: {
                                             VStack(alignment: .leading) {
                                                 HStack {
@@ -90,50 +90,18 @@ struct SearchView: View {
                         }
                     }
                 }
-                .onChange(of: searchTerm) { term in
+                .onChange(of: viewModel.searchTerm) { term in
                     Task {
-                        self.bookResults = try await booksManager.search(term.replacingOccurrences(of: " ", with: "+"))
+                        self.viewModel.bookResults = try await booksManager.search(term.replacingOccurrences(of: " ", with: "+"))
                     }
                 }
             }
             .preferredColorScheme(.dark)
             .navigationTitle("Search")
-            .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always))
-            .onAppear {
-                Task {
-                    Firestore.firestore()
-                        .collection("private")
-                        .document(Auth.auth().currentUser!.uid)
-                        .addSnapshotListener { snapshot, error in
-                            if let data = snapshot?.data(), let history = data["searchHistory"] as? [NSDictionary] {
-                                var convHistory = [SearchTerm]()
-                                for term in history {
-                                    convHistory.append(SearchTerm(id: term["id"] as! String, date: (term["date"] as! Timestamp).dateValue()))
-                                }
-                                searchHistory = convHistory
-                            } else {
-                                print("no conv")
-                            }
-                        }
-                }
-            }
+            .searchable(text: $viewModel.searchTerm, placement: .navigationBarDrawer(displayMode: .always))
             .onSubmit(of: .search) {
                 Task {
-                    let ref = Firestore.firestore()
-                        .collection("private")
-                        .document(Auth.auth().currentUser!.uid)
-                    var sortedHistory = searchHistory.sorted {$0.date > $1.date}
-                    if sortedHistory.contains(where: {$0.id == searchTerm}) {
-                        sortedHistory.removeAll(where: {$0.id == searchTerm})
-                    } else if sortedHistory.count > 4 {
-                        sortedHistory.removeLast()
-                    }
-                    sortedHistory.insert(SearchTerm(id: searchTerm, date: Date()), at: 0)
-                    
-                    try await ref
-                        .updateData([
-                            "searchHistory": sortedHistory.map { ["id": $0.id, "date": $0.date] }
-                        ])
+                    try await viewModel.performSearch(searchHistory: rootViewModel.searchHistory)
                 }
             }
         }

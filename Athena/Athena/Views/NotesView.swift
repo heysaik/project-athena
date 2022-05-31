@@ -8,16 +8,13 @@
 
 import SwiftUI
 import FirebaseAuth
-import FirebaseFirestore
 import Firebase
 import Foundation
 
 struct NotesView: View {
-    @State private var noteResults = [Note]()
     @State private var searchTerm = ""
     @State private var newNote = Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())
-    
-    private let firestore = Firestore.firestore()
+    @EnvironmentObject var rootViewModel: RootViewModel
     
     var body: some View {
         NavigationView {
@@ -26,14 +23,14 @@ struct NotesView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    if noteResults.count == 0 {
+                    if rootViewModel.myNotes.count == 0 {
                         Spacer()
                         Text("You have no notes")
                             .headline()
                         Spacer()
                     } else {
                         ScrollView {
-                            ForEach(searchTerm.isEmpty ? noteResults : noteResults.filter { $0.title.lowercased().contains(searchTerm.lowercased()) || $0.note.lowercased().contains(searchTerm.lowercased()) || (($0.book?.title.lowercased().contains(searchTerm.lowercased())) == true) || (($0.book?.authors.contains { $0.lowercased().contains(searchTerm.lowercased()) }) == true)}) { note in
+                            ForEach(searchTerm.isEmpty ? rootViewModel.myNotes : rootViewModel.myNotes.filter { $0.title.lowercased().contains(searchTerm.lowercased()) || $0.note.lowercased().contains(searchTerm.lowercased()) || (($0.book?.title.lowercased().contains(searchTerm.lowercased())) == true) || (($0.book?.authors.contains { $0.lowercased().contains(searchTerm.lowercased()) }) == true)}) { note in
                                 NavigationLink {
                                     NotesDetailView(note: note)
                                 } label: {
@@ -58,40 +55,18 @@ struct NotesView: View {
                 }
             }
             .navigationTitle("Notes")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .primaryAction, content: {
                     NavigationLink {
-                        TextEditView(note: $newNote, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")), contentType: .note, actionType: .create)
+                        EditTextView(note: $newNote, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")), contentType: .note, actionType: .create)
+                            .environmentObject(rootViewModel)
                     } label: {
                         Image(systemName: "plus")
                     }
                 })
             }
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search for Titles, Books, or Content")
-            .onAppear {
-                Firestore.firestore()
-                    .collection("notes")
-                    .whereField("creatorID", isEqualTo: Auth.auth().currentUser!.uid)
-                    .order(by: "editedAt", descending: true)
-                    .addSnapshotListener { querySnapshot, error in
-                        guard let snapshot = querySnapshot else {
-                            print("Error fetching snapshots: \(error!)")
-                            return
-                        }
-                        
-                        var newNotes = [Note]()
-                        for document in snapshot.documents {
-                            do {
-                                let document = try document.data(as: Note.self)
-                                newNotes.append(document)
-                            } catch let error {
-                                print(error.localizedDescription)
-                            }
-                        }
-                        newNotes.sort(by: {$0.editedAt > $1.editedAt})
-                        self.noteResults = newNotes
-                    }
-            }
         }
     }
 }

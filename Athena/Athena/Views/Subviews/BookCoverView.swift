@@ -22,9 +22,3 @@ struct BookCoverView: View {
             .shadow(color: .black.opacity(0.5), radius: 10, x: 0, y: 5)
     }
 }
-
-extension String {
-    func removeCurlFromPreview() -> String {
-        return self.replacingOccurrences(of: "&edge=curl", with: "")
-    }
-}

@@ -11,15 +11,12 @@ import FirebaseFirestore
 import SDWebImageSwiftUI
 
 struct ProfileView: View {
-    @State private var user = Auth.auth().currentUser
-    @State private var selectedSegment = "Already Read"
-    @State private var wishlistedBooks = [Book]()
-    @State private var alreadyReadBooks = [Book]()
-    @State private var selectedBookID: Book.ID? = nil
+    @State private var selectedSegment: LibraryType = .alreadyRead
     @State private var showSettingsView = false
-    
+    @EnvironmentObject var rootViewModel: RootViewModel
+
     private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)]
-    private let segments = ["Already Read", "Wishlist"]
+    private let segments: [LibraryType] = [.alreadyRead, .wishlist]
     private let auth = Auth.auth()
     private let firestore = Firestore.firestore()
  
@@ -39,15 +36,15 @@ struct ProfileView: View {
                         ScrollView {
                             Picker("", selection: $selectedSegment) {
                                 ForEach(segments, id:\.self) {
-                                    Text($0)
+                                    Text($0.rawValue)
                                 }
                             }
                             .pickerStyle(.segmented)
                             .padding(.horizontal)
                           
-                            if selectedSegment == "Wishlist" {
-                                // If the user is clicked on "wishlist"
-                                if wishlistedBooks.count == 0 {
+                            if selectedSegment == .wishlist {
+                                // If the user clicked on "Wishlist"
+                                if rootViewModel.wishlistedBooks.count == 0 {
                                     Spacer()
                                     VStack(spacing: 16) {
                                         Image(systemName: "list.star")
@@ -60,20 +57,19 @@ struct ProfileView: View {
                                     Spacer()
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
-                                        ForEach (wishlistedBooks) { book in
+                                        ForEach(rootViewModel.wishlistedBooks) { book in
                                             NavigationLink {
                                                 DetailView(book: book)
+                                                    .environmentObject(rootViewModel)
                                             } label: {
                                                 BookCoverView(imageURLString: book.imageLink, size: geometry.size.width / 2)
                                             }
-                                            .aspectRatio(0.66, contentMode: .fit)
-                                            .frame(width: geometry.size.width / 2)
                                         }
                                     }
                                 }
                             } else {
-                                // If the user is clicked on "already read"
-                                if alreadyReadBooks.count == 0 {
+                                // If the user clicked on "Already Read"
+                                if rootViewModel.alreadyReadBooks.count == 0 {
                                     Spacer()
                                     VStack(spacing: 16) {
                                         Image(systemName: "book.closed")
@@ -86,14 +82,13 @@ struct ProfileView: View {
                                     Spacer()
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
-                                        ForEach (alreadyReadBooks) { book in
+                                        ForEach(rootViewModel.alreadyReadBooks) { book in
                                             NavigationLink {
                                                 DetailView(book: book)
+                                                    .environmentObject(rootViewModel)
                                             } label: {
                                                 BookCoverView(imageURLString: book.imageLink, size: geometry.size.width / 2)
                                             }
-                                            .aspectRatio(0.66, contentMode: .fit)
-                                            .frame(width: geometry.size.width / 2)
                                         }
                                     }
                                 }
@@ -103,61 +98,6 @@ struct ProfileView: View {
                 }
                 .navigationTitle("Profile")
                 .tint(.white)
-                .onAppear {
-                    if let user = auth.currentUser {
-                        // Load Wishlist
-                        firestore
-                            .collection("wishlist")
-                            .whereField("readerID", isEqualTo: user.uid)
-                            .addSnapshotListener { querySnapshot, error in
-                                guard error == nil else {
-                                    print(error!.localizedDescription)
-                                    return
-                                }
-                                
-                                if let snapshot = querySnapshot {
-                                    let docs = snapshot.documents
-                                    self.wishlistedBooks = []
-                                    for doc in docs {
-                                        do {
-                                            let book = try doc.data(as: Book.self)
-                                            self.wishlistedBooks.append(book)
-                                        } catch let convertError {
-                                            print("Conversion Error: \(convertError.localizedDescription)")
-                                        }
-                                    }
-                                    
-                                    self.wishlistedBooks.sort(by: {$0.title < $1.title})
-                                }
-                            }
-                        
-                        // Load Already Read
-                        firestore
-                            .collection("alreadyRead")
-                            .whereField("readerID", isEqualTo: user.uid)
-                            .addSnapshotListener { querySnapshot, error in
-                                guard error == nil else {
-                                    print(error!.localizedDescription)
-                                    return
-                                }
-                                
-                                if let snapshot = querySnapshot {
-                                    let docs = snapshot.documents
-                                    self.alreadyReadBooks = []
-                                    for doc in docs {
-                                        do {
-                                            let book = try doc.data(as: Book.self)
-                                            self.alreadyReadBooks.append(book)
-                                        } catch let convertError {
-                                            print("Conversion Error: \(convertError.localizedDescription)")
-                                        }
-                                    }
-                                    
-                                    self.alreadyReadBooks.sort(by: {$0.title < $1.title})
-                                }
-                            }
-                    }
-                }
                 .toolbar {
                     ToolbarItem(placement: .primaryAction, content: {
                         Button {

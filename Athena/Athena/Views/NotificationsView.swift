@@ -10,11 +10,9 @@ import SwiftUI
 struct NotificationsView: View {
     @AppStorage("read_remind") var readReminder: Bool = true
     @AppStorage("remind_time") var reminderDate: Data = Data()
-    @AppStorage("team_notif") var teamAthena: Bool = true
 
     @State private var selectedTime = Date()
     @Environment(\.presentationMode) var presentationMode
-    
     
     // Used to show the gradient
     init() {
@@ -32,11 +30,6 @@ struct NotificationsView: View {
                         Spacer()
                         Toggle("", isOn: $readReminder)
                             .tint(Color(uiColor: UIColor(red: 0, green: 68/255, blue: 215/255, alpha: 1)))
-                    }
-                    .onChange(of: readReminder) { newValue in
-                        if newValue == false {
-                            teamAthena = false
-                        }
                     }
                     DatePicker("Time", selection: $selectedTime, displayedComponents: [.hourAndMinute])
                         .onChange(of: selectedTime) { newTime in
@@ -83,6 +76,7 @@ struct NotificationsView: View {
             })
         }
         .onAppear {
+            // Request notification to be sent permission
             UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in
                 
             }
@@ -95,49 +89,5 @@ struct NotificationsView: View {
 struct NotificationsView_Previews: PreviewProvider {
     static var previews: some View {
         NotificationsView()
-    }
-}
-
-class Storage: NSObject {
-    static func archiveStringArray(object: [String]) -> Data {
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
-            return data
-        } catch {
-            fatalError("Can't encode data: \(error)")
-        }
-        
-    }
-    
-    static func loadStringArray(data: Data) -> [String] {
-        do {
-            guard let array = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? [String] else {
-                return []
-            }
-            return array
-        } catch {
-            fatalError("loadWStringArray - Can't encode data: \(error)")
-        }
-    }
-    
-    static func archiveDate(object: Date) -> Data {
-        do {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: object, requiringSecureCoding: false)
-            return data
-        } catch {
-            fatalError("Can't encode data: \(error)")
-        }
-        
-    }
-    
-    static func loadDate(data: Data) -> Date {
-        do {
-            guard let date = try NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? Date else {
-                return Date()
-            }
-            return date
-        } catch {
-            fatalError("loadDate - Can't encode data: \(error)")
-        }
     }
 }

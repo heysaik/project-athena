@@ -19,28 +19,38 @@ struct RootView: View {
         UITabBar.appearance().barTintColor = UIColor(red: 0, green: 68/255, blue: 215/255, alpha: 1)
     }
     
+    @StateObject private var viewModel = RootViewModel()
+    
     var body: some View {
         TabView {
             LibraryView()
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Library", systemImage: "books.vertical.fill")
                 }
+
             SearchView()
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Search", systemImage: "magnifyingglass")
                 }
+
             NotesView()
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Notes", systemImage: "note.text")
                 }
+
             ProfileView()
+                .environmentObject(viewModel)
                 .tabItem {
                     Label("Profile", systemImage: "person.crop.circle")
                         
                 }
+
         }
+        .preferredColorScheme(.dark)
         .tint(.white)
-        .preferredColorScheme(.light)
     }
 }
 

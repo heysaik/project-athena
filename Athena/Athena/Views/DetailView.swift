@@ -13,10 +13,9 @@ import AlertKit
 
 struct DetailView: View {
     @StateObject var alertManager = CustomAlertManager()
+    @EnvironmentObject var rootViewModel: RootViewModel
 
-    @State private var inWishlist = false
-    @State private var inLibrary = false
-    @State private var inRead = false
+    @State private var currentBookLibraryType: LibraryType = .none
     @State private var showLibrarySheet = false
     @State private var recommendedBooks = [Book]()
     @State private var alertText = ""
@@ -51,11 +50,27 @@ struct DetailView: View {
                                 .foregroundColor(.white)
                             StarsView(rating: book.googleBooksRating ?? 0.0)
                                 .foregroundColor(Color.yellow)
+                            ScrollView {
+                                HStack {
+                                    ForEach(book.categories, id: \.self) { category in
+                                        ZStack {
+                                            RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                                .frame(height: 30)
+                                                .foregroundColor(.black.opacity(0.25))
+                                            Text(category)
+                                                .caption()
+                                                .foregroundColor(.white)
+                                                .padding(.top, 3)
+                                                .padding(4)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     
                     // Buttons
-                    if inLibrary {
+                    if currentBookLibraryType == .reading {
                         // User is currently reading book
                         HStack {
                             // Mark Book as Completed
@@ -121,11 +136,12 @@ struct DetailView: View {
                             ProgressCircleView(current: $book.pagesRead, total: book.pageCount)
                             Spacer()
                         }
-                    } else if inRead {
+                    } else if self.currentBookLibraryType == .alreadyRead {
                         HStack {
                             // Add/Edit Review
                             NavigationLink {
-                                TextEditView(note: .constant(Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())), book: $book, contentType: .review, actionType: (book.userReview == nil || book.userReview == "") ? .create : .update)
+                                EditTextView(note: .constant(Note(title: "", note: "", createdAt: Date(), creatorID: Auth.auth().currentUser!.uid, editedAt: Date())), book: $book, contentType: .review, actionType: (book.userReview == nil || book.userReview == "") ? .create : .update)
+                                    .environmentObject(rootViewModel)
                             } label: {
                                 Label(book.userReview == nil || book.userReview == "" ? "Add your Review" : "Edit your Review", systemImage: "pencil.circle.fill")
                                     .font(.custom("FoundersGrotesk-Medium", size: 15))
@@ -224,7 +240,7 @@ struct DetailView: View {
                                 }
                             }
                         }
-                    } else if inWishlist {
+                    } else if self.currentBookLibraryType == .wishlist {
                         HStack {
                             Spacer()
                             Button {
@@ -304,33 +320,7 @@ struct DetailView: View {
                         Text("About")
                             .titleFour()
                             .foregroundColor(.white)
-                        NavigationLink {
-                            ZStack {
-                                LinearGradient(colors: [Color(.displayP3, red: 0, green: 145/255, blue: 1, opacity: 1.0), Color(.displayP3, red: 0, green: 68/255, blue: 215/255, opacity: 1.0)], startPoint: .topLeading, endPoint: .center)
-                                    .edgesIgnoringSafeArea(.all)
-                                
-                                ScrollView {
-                                    Text(book.description)
-                                        .body()
-                                        .multilineTextAlignment(.leading)
-                                        .padding()
-                                        .foregroundColor(.white)
-                                }
-                                .navigationBarTitle("About \(book.title)")
-                            }
-                        } label: {
-                            Text(book.description)
-                                .body()
-                                .multilineTextAlignment(.leading)
-                                .foregroundColor(.white)
-                                .lineLimit(10)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .foregroundColor(.black.opacity(0.25))
-                                )
-                        }
+                        TextPreviewView(text: book.description, previewTitle: "About \(book.title)")
                     }
                     
                     if recommendedBooks.count > 0 {
@@ -421,7 +411,7 @@ struct DetailView: View {
             })
         ])
         .confirmationDialog("Add to Library", isPresented: $showLibrarySheet, actions: {
-            if inWishlist {
+            if currentBookLibraryType == .wishlist {
                 // Remove from Wishlist
                 Button(role: .destructive) {
                     Task {
@@ -437,7 +427,7 @@ struct DetailView: View {
                 }
             }
             
-            if !inLibrary || inWishlist {
+            if self.currentBookLibraryType != .reading || self.currentBookLibraryType == .wishlist {
                 // Add to Library
                 Button {
                     Task {
@@ -548,10 +538,7 @@ struct DetailView: View {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
                             self.book = convBook
-                            
-                            self.inWishlist = true
-                            self.inRead = false
-                            self.inLibrary = false
+                            self.currentBookLibraryType = .wishlist
                         } else {
                             print("failed conv")
                         }
@@ -559,8 +546,6 @@ struct DetailView: View {
                         print("conv error: \(error.localizedDescription)")
                         return
                     }
-                } else {
-                    self.inWishlist = false
                 }
             }
         
@@ -579,10 +564,7 @@ struct DetailView: View {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
                             self.book = convBook
-                            
-                            self.inWishlist = false
-                            self.inRead = true
-                            self.inLibrary = false
+                            self.currentBookLibraryType = .alreadyRead
                         } else {
                             print("failed conv")
                         }
@@ -590,8 +572,6 @@ struct DetailView: View {
                         print("conv error: \(error.localizedDescription)")
                         return
                     }
-                } else {
-                    self.inRead = false
                 }
             }
 
@@ -610,10 +590,7 @@ struct DetailView: View {
                     do {
                         if let convBook = try snapshot.documents.first?.data(as: Book.self) {
                             self.book = convBook
-                            
-                            self.inWishlist = false
-                            self.inRead = false
-                            self.inLibrary = true
+                            self.currentBookLibraryType = .reading
                         } else {
                             print("failed conv")
                         }
@@ -621,8 +598,6 @@ struct DetailView: View {
                         print("conv error: \(error.localizedDescription)")
                         return
                     }
-                } else {
-                    self.inLibrary = false
                 }
             }
     }
@@ -630,7 +605,7 @@ struct DetailView: View {
     func updateProgress(to page: Int) async throws {
         book.pagesRead = page
 
-        if self.inLibrary {
+        if self.currentBookLibraryType == .reading {
             try await Firestore
                 .firestore()
                 .collection("currentlyReading")
@@ -638,7 +613,7 @@ struct DetailView: View {
                 .updateData([
                     "pagesRead": page
                 ])
-        } else if self.inRead {
+        } else if self.currentBookLibraryType == .alreadyRead {
             try await Firestore
                 .firestore()
                 .collection("alreadyRead")
@@ -646,7 +621,7 @@ struct DetailView: View {
                 .updateData([
                     "pagesRead": page
                 ])
-        } else if self.inWishlist {
+        } else if self.currentBookLibraryType == .wishlist {
             try await Firestore
                 .firestore()
                 .collection("wishlist")

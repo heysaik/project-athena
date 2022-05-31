@@ -12,7 +12,8 @@ struct NotesDetailView: View {
     @State private var note: Note = Note(title: "", note: "", createdAt: Date(), creatorID: "", editedAt: Date())
     @State private var showDeleteAlert = false
     @Environment(\.presentationMode) var presentationMode
-    
+    @EnvironmentObject var rootViewModel: RootViewModel
+
     private let firestore = Firestore.firestore()
     
     init(note: Note) {
@@ -68,7 +69,8 @@ struct NotesDetailView: View {
         .toolbar {
             ToolbarItem(placement: .primaryAction, content: {
                 NavigationLink {
-                    TextEditView(note: $note, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")),contentType: .note, actionType: .update)
+                    EditTextView(note: $note, book: .constant(Book(id: "", docID: "", title: "", authors: [], publisher: "", publishedDate: "", description: "", pageCount: 0, categories: [], imageLink: "")),contentType: .note, actionType: .update)
+                        .environmentObject(rootViewModel)
                 } label: {
                     Image(systemName: "pencil")
                 }
