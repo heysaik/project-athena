@@ -13,6 +13,8 @@ import SDWebImageSwiftUI
 struct ProfileView: View {
     @State private var selectedSegment: LibraryType = .alreadyRead
     @State private var showSettingsView = false
+    @State private var sortOption: SortOptions = .title
+
     @EnvironmentObject var rootViewModel: RootViewModel
 
     private var twoColumnGrid = [GridItem(.flexible(), alignment: .top), GridItem(.flexible(), alignment: .top)]
@@ -57,7 +59,7 @@ struct ProfileView: View {
                                     .padding(.horizontal)
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
-                                        ForEach(rootViewModel.wishlistedBooks) { book in
+                                        ForEach(rootViewModel.wishlistedBooks.sortBy(option: sortOption)) { book in
                                             NavigationLink {
                                                 DetailView(book: book)
                                                     .environmentObject(rootViewModel)
@@ -82,7 +84,7 @@ struct ProfileView: View {
                                     .padding(.horizontal)
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
-                                        ForEach(rootViewModel.alreadyReadBooks) { book in
+                                        ForEach(rootViewModel.alreadyReadBooks.sortBy(option: sortOption)) { book in
                                             NavigationLink {
                                                 DetailView(book: book)
                                                     .environmentObject(rootViewModel)
@@ -99,6 +101,22 @@ struct ProfileView: View {
                 .navigationTitle("Profile")
                 .tint(.white)
                 .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing, content: {
+                        Menu(
+                            content: {
+                                Picker("", selection: $sortOption) {
+                                    Text("Sort by Title")
+                                        .tag(SortOptions.title)
+                                    Text("Sort by Author")
+                                        .tag(SortOptions.author)
+                                }
+                            },
+                            label: {
+                                Image(systemName: "arrow.up.arrow.down")
+                            }
+                        )
+                    })
+                    
                     ToolbarItem(placement: .primaryAction, content: {
                         Button {
                             self.showSettingsView.toggle()

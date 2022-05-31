@@ -166,17 +166,4 @@ class RootViewModel: NSObject, ObservableObject {
                 }
         }
     }
-    
-    // MARK: Public Functions
-    public func getCurrentlyReadingBooks(sort option: SortOptions) -> [Book] {
-        if option == .title {
-            return currentlyReadingBooks.sorted(by: {$0.title < $1.title})
-        } else if option == .author {
-            return currentlyReadingBooks.sorted(by: {$0.authors[0] < $1.authors[0]})
-        } else if option == .progress {
-            return currentlyReadingBooks.sorted(by: {(Double($0.pagesRead ?? 0)/Double($0.pageCount) * 100) > (Double($1.pagesRead ?? 0)/Double($1.pageCount) * 100)})
-        } else {
-            return currentlyReadingBooks
-        }
-    }
 }

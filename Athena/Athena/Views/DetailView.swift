@@ -53,16 +53,21 @@ struct DetailView: View {
                             ScrollView {
                                 HStack {
                                     ForEach(book.categories, id: \.self) { category in
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                                                .frame(height: 30)
-                                                .foregroundColor(.black.opacity(0.25))
+                                        ZStack(alignment: .leading) {
+//                                            RoundedRectangle(cornerRadius: 15)
+//                                                .foregroundColor(.black.opacity(0.25))
                                             Text(category)
                                                 .caption()
                                                 .foregroundColor(.white)
                                                 .padding(.top, 3)
                                                 .padding(4)
+                                                .background(
+                                                    RoundedRectangle(cornerRadius: 15)
+                                                        .foregroundColor(.black.opacity(0.25))
+                                                        .frame(height: 30)
+                                                )
                                         }
+                                        .frame(height: 30)
                                     }
                                 }
                             }
@@ -162,6 +167,7 @@ struct DetailView: View {
                                         .collection("alreadyRead")
                                         .document(book.docID)
                                         .delete()
+                                    self.currentBookLibraryType = .none
                                     gen.notificationOccurred(.success)
                                 }
                             } label: {
@@ -419,11 +425,12 @@ struct DetailView: View {
                             .collection("wishlist")
                             .document(book.docID)
                             .delete()
+                        getAllBookTypes()
+                        self.currentBookLibraryType = .none
                         gen.notificationOccurred(.success)
                     }
                 } label: {
                     Text("Remove from Wishlist")
-                    
                 }
             }
             

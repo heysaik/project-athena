@@ -47,7 +47,7 @@ struct LibraryView: View {
                     } else {
                         ScrollView {
                             VStack(spacing: 16) {
-                                ForEach(rootViewModel.getCurrentlyReadingBooks(sort: sortOption)) { book in
+                                ForEach(rootViewModel.currentlyReadingBooks.sortBy(option: sortOption)) { book in
                                     NavigationLink {
                                         DetailView(book: book)
                                             .environmentObject(rootViewModel)
