@@ -206,79 +206,7 @@ struct SettingsView: View {
                             
                             Button(role: .destructive) {
                                 Task {
-                                    if let userID = auth.currentUser?.uid {
-                                        // Delete Firestore Public Data
-                                        try await firestore
-                                            .collection("users")
-                                            .document(userID)
-                                            .delete()
-                                        
-                                        // Delete Firestore Private Data
-                                        try await firestore
-                                            .collection("private")
-                                            .document(userID)
-                                            .delete()
-                                        
-                                        // Delete Notes
-                                        let notesDocs = try await firestore
-                                            .collection("notes")
-                                            .whereField("creatorID", isEqualTo: userID)
-                                            .getDocuments()
-                                        for document in notesDocs.documents {
-                                            try await firestore
-                                                .collection("notes")
-                                                .document(document.documentID)
-                                                .delete()
-                                        }
-                                        
-                                        // Delete Already Read
-                                        let arDocs = try await firestore
-                                            .collection("alreadyRead")
-                                            .whereField("readerID", isEqualTo: userID)
-                                            .getDocuments()
-                                        for document in arDocs.documents {
-                                            try await firestore
-                                                .collection("alreadyRead")
-                                                .document(document.documentID)
-                                                .delete()
-                                        }
-                                        
-                                        // Wishlist Notes
-                                        let wishDocs = try await firestore
-                                            .collection("wishlist")
-                                            .whereField("readerID", isEqualTo: userID)
-                                            .getDocuments()
-                                        for document in wishDocs.documents {
-                                            try await firestore
-                                                .collection("notes")
-                                                .document(document.documentID)
-                                                .delete()
-                                        }
-                                        
-                                        // Currently Reading Notes
-                                        let crDocs = try await firestore
-                                            .collection("currentlyReading")
-                                            .whereField("creatorID", isEqualTo: userID)
-                                            .getDocuments()
-                                        for document in crDocs.documents {
-                                            try await firestore
-                                                .collection("currentlyReading")
-                                                .document(document.documentID)
-                                                .delete()
-                                        }
-                                        
-                                        // Delete Auth
-                                        do {
-                                            try auth.signOut()
-                                            try await auth.currentUser?.delete()
-                                            loggedOut = true
-                                        } catch {
-                                            print("already logged out")
-                                        }
-                                    } else {
-                                        print("logged out")
-                                        loggedOut = true
-                                    }
+                                    try await deleteAccount()
                                 }
                             } label: {
                                 Text("Delete")
@@ -429,6 +357,83 @@ struct SettingsView: View {
                     self.newEmail = privateData?["email"] as? String ?? ""
                 }
             }
+        }
+    }
+    
+    private func deleteAccount() async throws {
+        if let userID = auth.currentUser?.uid {
+            // Delete Firestore Public Data
+            try await firestore
+                .collection("users")
+                .document(userID)
+                .delete()
+            
+            // Delete Firestore Private Data
+            try await firestore
+                .collection("private")
+                .document(userID)
+                .delete()
+            
+            // Delete Notes
+            let notesDocs = try await firestore
+                .collection("notes")
+                .whereField("creatorID", isEqualTo: userID)
+                .getDocuments()
+            
+            for document in notesDocs.documents {
+                try await firestore
+                    .collection("notes")
+                    .document(document.documentID)
+                    .delete()
+            }
+            
+            // Delete Already Read
+            let arDocs = try await firestore
+                .collection("alreadyRead")
+                .whereField("readerID", isEqualTo: userID)
+                .getDocuments()
+            for document in arDocs.documents {
+                try await firestore
+                    .collection("alreadyRead")
+                    .document(document.documentID)
+                    .delete()
+            }
+            
+            // Wishlist Notes
+            let wishDocs = try await firestore
+                .collection("wishlist")
+                .whereField("readerID", isEqualTo: userID)
+                .getDocuments()
+            for document in wishDocs.documents {
+                try await firestore
+                    .collection("notes")
+                    .document(document.documentID)
+                    .delete()
+            }
+            
+            // Currently Reading Notes
+            let crDocs = try await firestore
+                .collection("currentlyReading")
+                .whereField("readerID", isEqualTo: userID)
+                .getDocuments()
+            for document in crDocs.documents {
+                try await firestore
+                    .collection("currentlyReading")
+                    .document(document.documentID)
+                    .delete()
+            }
+            
+            // Delete Auth
+            do {
+                try await auth.currentUser?.delete()
+                try auth.signOut()
+                loggedOut = true
+            } catch {
+                print("already logged out")
+            }
+        } else {
+            print("logged out")
+            loggedOut = true
         }
     }
 }

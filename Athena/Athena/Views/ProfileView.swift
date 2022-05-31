@@ -45,16 +45,16 @@ struct ProfileView: View {
                             if selectedSegment == .wishlist {
                                 // If the user clicked on "Wishlist"
                                 if rootViewModel.wishlistedBooks.count == 0 {
-                                    Spacer()
                                     VStack(spacing: 16) {
+                                        Spacer()
                                         Image(systemName: "list.star")
                                         Text("You do not have any books on your wishlist.")
                                             .headline()
                                             .multilineTextAlignment(.center)
+                                        Spacer()
                                     }
                                     .foregroundColor(.white)
                                     .padding(.horizontal)
-                                    Spacer()
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
                                         ForEach(rootViewModel.wishlistedBooks) { book in
@@ -70,16 +70,16 @@ struct ProfileView: View {
                             } else {
                                 // If the user clicked on "Already Read"
                                 if rootViewModel.alreadyReadBooks.count == 0 {
-                                    Spacer()
                                     VStack(spacing: 16) {
+                                        Spacer()
                                         Image(systemName: "book.closed")
                                         Text("You have not read any books yet.")
                                             .headline()
                                             .multilineTextAlignment(.center)
+                                        Spacer()
                                     }
                                     .foregroundColor(.white)
                                     .padding(.horizontal)
-                                    Spacer()
                                 } else {
                                     LazyVGrid(columns: twoColumnGrid, spacing: 30) {
                                         ForEach(rootViewModel.alreadyReadBooks) { book in
