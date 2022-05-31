@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Allow Athena to send you timely reminders to encourage you to keep reading</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FoundersGrotesk-Bold.otf</string>
+		<string>FoundersGrotesk-Medium.otf</string>
+		<string>FoundersGrotesk-Regular.otf</string>
+		<string>FoundersGrotesk-Light.otf</string>
+		<string>FoundersGrotesk-Semibold.otf</string>
+	</array>
+</dict>
+</plist>
