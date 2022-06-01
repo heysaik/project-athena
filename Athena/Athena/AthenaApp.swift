@@ -16,6 +16,7 @@ struct AthenaApp: App {
         WindowGroup {
             if Auth.auth().currentUser == nil {
                 OnboardingOne()
+                    .navigationViewStyle(.stack)
             } else {
                 RootView()
             }

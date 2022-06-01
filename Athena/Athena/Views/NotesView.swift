@@ -68,6 +68,7 @@ struct NotesView: View {
             }
             .searchable(text: $searchTerm, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search for Titles, Books, or Content")
         }
+        .navigationViewStyle(.stack)
     }
 }
 

@@ -104,7 +104,7 @@ struct LibraryView: View {
             }
             .tint(.white)
         }
-        
+        .navigationViewStyle(.stack)
     }
 }
 

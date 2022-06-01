@@ -105,6 +105,7 @@ struct SearchView: View {
                 }
             }
         }
+        .navigationViewStyle(.stack)
     }
 }
 
