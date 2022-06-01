@@ -47,6 +47,7 @@ struct OnboardingOne: View {
                 }
                 .padding(.vertical)
             }
+            .navigationViewStyle(.stack)
         }
     }
 }
